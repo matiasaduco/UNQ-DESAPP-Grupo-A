@@ -13,7 +13,7 @@ class CriptoTest{
         val criptoName : String = "ALICEUSDT"
         val cripto : Cripto = Cripto(criptoName, 0.768f, LocalDate.now())
 
-        Assertions.assertEquals(cripto.nam, criptoName)
+        Assertions.assertEquals(cripto.name, criptoName)
     }
 
     @Test
