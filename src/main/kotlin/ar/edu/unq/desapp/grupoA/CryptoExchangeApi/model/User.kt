@@ -11,4 +11,5 @@ class User(
 ) {
     var operations: Int = 0
     var reputation: Float = 0f
+    var id : Int? = null
 }
