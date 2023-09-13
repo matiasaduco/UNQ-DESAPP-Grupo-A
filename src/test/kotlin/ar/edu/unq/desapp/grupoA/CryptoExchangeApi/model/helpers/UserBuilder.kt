@@ -11,8 +11,6 @@ class UserBuilder() {
     var cvu: String = "no cvu"
     var walletAddress: String = "no wallet address"
 
-    fun aPerson(): UserBuilder{ return UserBuilder() }
-
     fun build() : User{
         val user = User(name,surname,email,address,password,cvu,walletAddress)
         return user

@@ -8,8 +8,8 @@ class Transaction(val cripto: Cripto,
                   val operation: IntentionType,
                   val user: User){
 
-    val creationDate = LocalDate.now()
-    var transactionState = TransactionState.OPEN
+    val creationDate : LocalDate = LocalDate.now()
+    var transactionState : TransactionState = TransactionState.OPEN
     var transferDate: LocalDate? = null
 
 }
