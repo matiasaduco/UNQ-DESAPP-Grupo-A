@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
+import java.math.BigInteger
 
 class UserCreationDTO(
     val name: String,
@@ -8,12 +9,11 @@ class UserCreationDTO(
     val email: String,
     val address : String,
     val password: String,
-    val cvu: String,
-    val walletAddress: String,
+    val cvu: BigInteger,
+    val walletAddress: Int,
 ){
 
-
-    fun toModel(): User{
+    fun toModel(): User {
         return User(
             name = this.name,
             surname = this.surname,
@@ -24,4 +24,19 @@ class UserCreationDTO(
             walletAddress = this.walletAddress
         )
     }
+
+    companion object {
+        fun fromModel(user: User): UserCreationDTO {
+            return UserCreationDTO(
+                user.name,
+                user.surname,
+                user.email,
+                user.address,
+                user.password,
+                user.cvu,
+                user.walletAddress
+            )
+        }
+    }
+
 }

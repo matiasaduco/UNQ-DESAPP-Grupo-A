@@ -1,5 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
+import java.math.BigInteger
+
 
 class User(
     var name: String,
@@ -7,8 +9,8 @@ class User(
     var email: String,
     var address: String,
     var password: String,
-    var cvu: String,
-    var walletAddress: String,
+    var cvu: BigInteger,
+    var walletAddress: Int,
 ) {
     var operations: Int = 0
     var reputation: Int = 0
