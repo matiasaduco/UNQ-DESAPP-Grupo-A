@@ -3,6 +3,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.helpers.UserBuilder
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
+import java.math.BigInteger
 
 class UserTest {
 
@@ -46,10 +47,9 @@ class UserTest {
         Assertions.assertEquals(user.password, password)
     }
 
-
     @Test
     fun userHasACVU(){
-        val cvu : String = "3102059301928473829192"
+        val cvu : BigInteger = BigInteger("3102059301928473829192")
         val user = UserBuilder().withCVU(cvu).build()
 
         Assertions.assertEquals(user.cvu, cvu)
@@ -57,7 +57,7 @@ class UserTest {
 
     @Test
     fun userHasAWalletAddress(){
-        val walletAddress : String = "10492928"
+        val walletAddress : Int = 10492928
         val user = UserBuilder().withWalletAddress(walletAddress).build()
 
         Assertions.assertEquals(user.walletAddress, walletAddress)
