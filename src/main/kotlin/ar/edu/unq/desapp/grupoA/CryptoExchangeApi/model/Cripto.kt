@@ -5,5 +5,5 @@ import java.util.Date
 
 class Cripto( val name:String, var  price:Float, val time: LocalDate ){
 
-
+    var id : Int? = null
 }

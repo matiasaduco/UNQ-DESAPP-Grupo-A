@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.helpers
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
+import java.math.BigInteger
 
 class UserBuilder() {
     var name: String  = "no name"
@@ -8,10 +9,8 @@ class UserBuilder() {
     var email: String = "no email"
     var address: String = "no address"
     var password: String = "no password"
-    var cvu: String = "no cvu"
-    var walletAddress: String = "no wallet address"
-
-    fun aPerson(): UserBuilder{ return UserBuilder() }
+    var cvu = BigInteger("1111111111111111111111")
+    var walletAddress: Int = 111111111
 
     fun build() : User{
         val user = User(name,surname,email,address,password,cvu,walletAddress)
@@ -28,7 +27,7 @@ class UserBuilder() {
 
     fun withPassword(aPassword: String) = apply{ this.password = aPassword }
 
-    fun withCVU(aCVU: String)= apply{ this.cvu = aCVU }
+    fun withCVU(aCVU: BigInteger)= apply{ this.cvu = aCVU }
 
-    fun withWalletAddress(aWalletAddress: String)= apply{ this.walletAddress = aWalletAddress }
+    fun withWalletAddress(aWalletAddress: Int)= apply{ this.walletAddress = aWalletAddress }
 }
