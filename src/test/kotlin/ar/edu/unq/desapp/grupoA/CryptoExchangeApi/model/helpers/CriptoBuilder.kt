@@ -9,7 +9,7 @@ class CriptoBuilder {
     var price : Float= 0f
     var time : LocalDate = LocalDate.now()
 
-    fun build() : Cripto{
+    fun build() : Cripto {
         val cripto = Cripto(name,price,time)
         return cripto
     }

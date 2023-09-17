@@ -1,6 +1,5 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
-import ar.eduTransaction.unq.desapp.grupoA.CryptoExchangeApi.model.Cripto
 import java.time.LocalDate
 
 class Intention(

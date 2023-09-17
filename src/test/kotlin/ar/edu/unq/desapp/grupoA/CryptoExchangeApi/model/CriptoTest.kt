@@ -1,9 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
 import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
-import org.springframework.util.Assert
 import java.time.LocalDate
 
 class CriptoTest{

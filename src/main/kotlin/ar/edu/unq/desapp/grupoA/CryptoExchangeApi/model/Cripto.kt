@@ -1,4 +1,4 @@
-package ar.eduTransaction.unq.desapp.grupoA.CryptoExchangeApi.model
+package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
 import java.time.LocalDate
 
