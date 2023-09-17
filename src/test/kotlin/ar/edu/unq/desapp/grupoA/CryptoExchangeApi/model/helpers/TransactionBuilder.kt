@@ -1,7 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.helpers
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.*
-import java.time.LocalDate
 
 class TransactionBuilder {
     var cripto: Cripto = CriptoBuilder().build()
@@ -11,8 +10,8 @@ class TransactionBuilder {
     var user: User = UserBuilder().build()
 
 
-    fun build(): Transaction {
-        val transaction = Transaction(cripto, criptoNominalQuantity, intentionPrice, operation, user)
+    fun build(): Intention {
+        val transaction = Intention(cripto, criptoNominalQuantity, intentionPrice, operation, user)
         return transaction
     }
 
