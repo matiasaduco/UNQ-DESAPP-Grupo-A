@@ -7,11 +7,11 @@ class UserCreationDTO(
     val name: String,
     val surname: String,
     val email: String,
-    val address : String,
+    val address: String,
     val password: String,
     val cvu: BigInteger,
     val walletAddress: Int,
-){
+) {
 
     fun toModel(): User {
         return User(

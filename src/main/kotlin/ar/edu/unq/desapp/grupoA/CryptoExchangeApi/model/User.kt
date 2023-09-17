@@ -14,20 +14,17 @@ class User(
 ) {
     var operations: Int = 0
     var reputation: Int = 0
-    var id : Int? = null
+    var id: Int? = null
 
-    fun cancelTransaction(){
-        this.reputation -= 20
-        if (this.reputation < 0){
-            this.reputation = 0
-        }
+    fun cancelTransaction() {
+        this.reputation = (this.reputation - 20).coerceAtLeast(0)
     }
 
-    fun acceptTransactionUnder30minutes(){
+    fun acceptTransactionUnder30minutes() {
         this.reputation += 10
     }
 
-    fun acceptTransactionOver30minutes(){
+    fun acceptTransactionOver30minutes() {
         this.reputation += 5
     }
 }
