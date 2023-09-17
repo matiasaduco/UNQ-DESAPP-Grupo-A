@@ -1,8 +1,12 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import org.springframework.stereotype.Service
+import java.math.BigInteger
+import java.util.regex.Matcher
+import java.util.regex.Pattern
 
 @Service
 class UserServiceImpl: UserService {
@@ -11,8 +15,21 @@ class UserServiceImpl: UserService {
 
     override fun signin(user: User): User {
         try {
-            userRepository.add(user)
-            return user
+            if (hasAValidName(user.name) &&
+                hasAValidName(user.surname)&&
+                hasAValidEmail(user.email) &&
+                hasAValidAddress(user.address) &&
+                hasAValidPassword(user.password)&&
+                hasAValidPassword(user.password) &&
+                hasAValidCVU(user.cvu) &&
+                hasAValidWalletAddress(user.walletAddress)
+                ){
+                userRepository.add(user)
+                return user
+            }
+            else{
+                throw UserBodyIncorrectException()
+            }
         }
         catch (exception: Exception) {
             throw Exception("Error al ingresar el usuario $user")
@@ -25,5 +42,37 @@ class UserServiceImpl: UserService {
 
     override fun getUserReport(id: Int): User {
         TODO("Not yet implemented")
+    }
+
+    fun hasAValidName(name : String) : Boolean {
+
+        return name.length >= 3 && name.length <= 30
+    }
+
+    fun hasAValidEmail(email: String) : Boolean{
+        return email.contains("@") && email.contains(".com")
+    }
+
+    fun hasAValidAddress(address: String):Boolean{
+        return address.length >= 10 && address.length <= 30
+    }
+
+    fun hasAValidPassword(password : String) : Boolean{
+        val hasUpperCase  = password.chars().anyMatch(Character :: isUpperCase)
+
+        val specialCharPattern : Pattern = Pattern.compile("[!@#$%&*()_+=|<>?{}\\[\\]~-]")
+        val hasSpecialChar : Matcher = specialCharPattern.matcher(password)
+
+        val hasLowerCase = password.chars().anyMatch(Character :: isLowerCase)
+
+       return hasUpperCase && hasSpecialChar.find() && hasLowerCase && password.length >= 6
+    }
+
+    fun hasAValidCVU(cvu : BigInteger): Boolean{
+        return cvu.toString().length == 22
+    }
+
+    fun hasAValidWalletAddress(walletAddress : Int) : Boolean{
+        return walletAddress.toString().length == 8
     }
 }

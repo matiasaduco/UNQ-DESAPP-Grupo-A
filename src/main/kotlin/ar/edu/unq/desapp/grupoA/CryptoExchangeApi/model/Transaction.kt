@@ -12,6 +12,8 @@ class Transaction(val cripto: Cripto,
     var transactionState : TransactionState = TransactionState.OPEN
     var transferDate: LocalDate? = null
 
+    var id : Int? = null
+
 }
 
 
