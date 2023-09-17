@@ -20,7 +20,7 @@ class UserController(private val userService: UserService) {
     }
 
     @GetMapping("/{userId}")
-    fun getUser(@PathVariable userId: Int) : String {
+    fun getUser(@PathVariable userId: Int): String {
         return "Soy un usuario, creeme."
     }
 
