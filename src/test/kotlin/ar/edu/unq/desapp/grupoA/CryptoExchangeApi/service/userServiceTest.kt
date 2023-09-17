@@ -3,11 +3,22 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.service
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl.UserServiceImpl
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.extension.ExtendWith
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.math.BigInteger
+
+@SpringBootTest
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@ExtendWith(SpringExtension::class)
+
 
 class userServiceTest {
 
-    private val userService = UserServiceImpl()
+    @Autowired
+    lateinit var userService : UserServiceImpl
 
     @Test
     fun checkThatNameIsValid(){
