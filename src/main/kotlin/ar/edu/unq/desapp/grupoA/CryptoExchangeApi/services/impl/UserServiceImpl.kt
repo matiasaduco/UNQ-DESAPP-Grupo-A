@@ -32,7 +32,6 @@ class UserServiceImpl : UserService {
                 hasAValidEmail(user.email) &&
                 hasAValidAddress(user.address) &&
                 hasAValidPassword(user.password) &&
-                hasAValidPassword(user.password) &&
                 hasAValidCVU(user.cvu) &&
                 hasAValidWalletAddress(user.walletAddress)
     }
