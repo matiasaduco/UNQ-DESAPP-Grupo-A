@@ -3,7 +3,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 import java.time.LocalDate
 
 class Intention(
-    val cripto: Cripto,
+    val crypto: Crypto,
     val criptoNominalQuantity: Int,
     val intentionPrice: Float,
     val operation: IntentionType,

@@ -13,18 +13,24 @@ class User(
     var walletAddress: Int,
 ) {
     var operations: Int = 0
-    var reputation: Int = 0
+    var reputationPoints: Int = 0
     var id: Int? = null
 
+
+    fun getReputation() : Double {
+        return this.reputationPoints / this.operations.toDouble()
+    }
     fun cancelTransaction() {
-        this.reputation = (this.reputation - 20).coerceAtLeast(0)
+        this.reputationPoints = (this.reputationPoints - 20).coerceAtLeast(0)
     }
 
     fun acceptTransactionUnder30minutes() {
-        this.reputation += 10
+        this.reputationPoints += 10
+        this.operations += 1
     }
 
     fun acceptTransactionOver30minutes() {
-        this.reputation += 5
+        this.reputationPoints += 5
+        this.operations += 1
     }
 }

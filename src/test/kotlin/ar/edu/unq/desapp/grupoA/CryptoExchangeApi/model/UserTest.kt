@@ -67,7 +67,7 @@ class UserTest {
     fun userStartsWith0Reputation(){
         val user = UserBuilder().build()
 
-        Assertions.assertEquals(user.reputation, 0)
+        Assertions.assertEquals(user.reputationPoints, 0)
     }
 
     @Test fun userStartsWith0Operations(){
@@ -79,37 +79,56 @@ class UserTest {
     @Test
     fun whenUserAcceptsTransactionUnder30MinutesHisReputationIncreses(){
         val user : User = UserBuilder().build()
-        val reputation : Int = user.reputation
+        val reputation : Int = user.reputationPoints
         user.acceptTransactionUnder30minutes()
 
-        Assertions.assertEquals(user.reputation, reputation + 10)
+        Assertions.assertEquals(user.reputationPoints, reputation + 10)
     }
 
     @Test
     fun whenUserAcceptsTransactionOver30MinutesHisReputationIncreses(){
         val user : User = UserBuilder().build()
-        val reputation : Int = user.reputation
+        val reputation : Int = user.reputationPoints
         user.acceptTransactionOver30minutes()
 
-        Assertions.assertEquals(user.reputation, reputation + 5)
+        Assertions.assertEquals(user.reputationPoints, reputation + 5)
     }
 
     @Test
     fun whenUserCancelsTransactionHisReputationDecreases(){
         val user : User = UserBuilder().build()
-        user.reputation = 50
-        val reputation : Int = user.reputation
+        user.reputationPoints = 50
+        val reputation : Int = user.reputationPoints
         user.cancelTransaction()
 
-        Assertions.assertEquals(user.reputation, reputation - 20)
+        Assertions.assertEquals(user.reputationPoints, reputation - 20)
     }
 
     @Test
     fun whenUserCancelsTransactionHisReputationCantGoUnder0(){
         val user : User = UserBuilder().build()
-        val reputation : Int = user.reputation
+        val reputation : Int = user.reputationPoints
         user.cancelTransaction()
 
-        Assertions.assertEquals(user.reputation, reputation)
+        Assertions.assertEquals(user.reputationPoints, reputation)
+    }
+
+    @Test
+    fun whenAUserAcceptsATransactionHisOperationsIncresases(){
+        val user : User = UserBuilder().build()
+        val operations = user.operations
+
+        user.acceptTransactionUnder30minutes()
+
+        Assertions.assertEquals(user.operations, operations + 1)
+    }
+
+    @Test
+    fun getUserReputation(){
+        val user : User = UserBuilder().build()
+        user.acceptTransactionUnder30minutes()
+        val reputation : Double = (10 / 1).toDouble() // 10 points over 1 operation
+
+        Assertions.assertEquals(user.getReputation() , reputation)
     }
 }
