@@ -13,11 +13,11 @@ class UserServiceImpl : UserService {
     // Eliminar en cuanto tengamos implementación de H2
     var userRepository: MutableList<User> = mutableListOf()
 
-    override fun signin(user: User): User {
+    override fun signup(user: User): User {
         if (isValidateUser(user)) {
-            try {
+            return try {
                 userRepository.add(user)
-                return user
+                user
             } catch (exception: Exception) {
                 throw Exception("Error al ingresar el usuario $user")
             }

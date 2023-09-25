@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+
+## Hasta encontrar solucin, lo elimino.
+.github/workflows/sonar.yml
