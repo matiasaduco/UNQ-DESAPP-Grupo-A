@@ -2,21 +2,26 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
+import jakarta.transaction.Transactional
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 @Service
+@Transactional
 class UserServiceImpl : UserService {
-    // Eliminar en cuanto tengamos implementación de H2
-    var userRepository: MutableList<User> = mutableListOf()
+
+    @Autowired
+    private lateinit var userRepository : UserRepository
 
     override fun signup(user: User): User {
         if (isValidateUser(user)) {
             return try {
-                userRepository.add(user)
+                userRepository.save(user)
                 user
             } catch (exception: Exception) {
                 throw Exception("Error al ingresar el usuario $user")
