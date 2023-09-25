@@ -18,11 +18,11 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var userRepository : UserRepository
 
-    override fun signin(user: User): User {
+    override fun signup(user: User): User {
         if (isValidateUser(user)) {
-            try {
+            return try {
                 userRepository.save(user)
-                return user
+                user
             } catch (exception: Exception) {
                 throw Exception("Error al ingresar el usuario $user")
             }
