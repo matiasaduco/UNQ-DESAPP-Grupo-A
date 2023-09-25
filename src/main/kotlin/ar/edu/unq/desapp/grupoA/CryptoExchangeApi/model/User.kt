@@ -1,8 +1,14 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
+import jakarta.persistence.Table
 import java.math.BigInteger
 
-
+@Entity
+@Table(name = "_USER")
 class User(
     var name: String,
     var surname: String,
@@ -14,6 +20,9 @@ class User(
 ) {
     var operations: Int = 0
     var reputationPoints: Int = 0
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
 
 
