@@ -22,7 +22,7 @@ class UserController(private val userService: UserService) {
             val userDTO = UserCreationDTO.fromModel(userService.signup(user))
             ResponseEntity.status(HttpStatus.OK).body(userDTO)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e)
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 

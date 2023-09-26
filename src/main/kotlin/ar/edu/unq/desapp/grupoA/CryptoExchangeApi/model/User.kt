@@ -1,5 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
@@ -12,10 +13,13 @@ import java.math.BigInteger
 class User(
     var name: String,
     var surname: String,
+    @Column(unique = true)
     var email: String,
     var address: String,
     var password: String,
+    @Column(unique = true)
     var cvu: BigInteger,
+    @Column(unique = true)
     var walletAddress: Int,
 ) {
     var operations: Int = 0

@@ -5,7 +5,7 @@ import java.time.LocalDate
 class Intention(
     val crypto: Crypto,
     val criptoNominalQuantity: Int,
-    val intentionPrice: Float,
+    val intentionPriceInArs: Float,
     val operation: IntentionType,
     val user: User
 ) {
