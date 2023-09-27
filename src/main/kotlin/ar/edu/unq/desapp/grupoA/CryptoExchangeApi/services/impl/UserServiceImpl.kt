@@ -16,7 +16,7 @@ import java.util.regex.Pattern
 class UserServiceImpl : UserService {
 
     @Autowired
-    private lateinit var userRepository : UserRepository
+    private lateinit var userRepository: UserRepository
 
     override fun signup(user: User): User {
         if (isValidateUser(user)) {
@@ -50,7 +50,7 @@ class UserServiceImpl : UserService {
     }
 
     fun hasAValidName(name: String): Boolean {
-        return name.length >= 3 && name.length <= 30
+        return name.length in 3..30
     }
 
     fun hasAValidEmail(email: String): Boolean {

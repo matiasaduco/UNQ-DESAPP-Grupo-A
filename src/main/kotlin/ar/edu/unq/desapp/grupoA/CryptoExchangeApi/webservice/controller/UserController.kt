@@ -19,8 +19,8 @@ class UserController(private val userService: UserService) {
     fun signup(@RequestBody userDTO: UserCreationDTO): ResponseEntity<Any> {
         return try {
             val user = userDTO.toModel()
-            val userDTO = UserCreationDTO.fromModel(userService.signup(user))
-            ResponseEntity.status(HttpStatus.OK).body(userDTO)
+            val userCreationDTO = UserCreationDTO.fromModel(userService.signup(user))
+            ResponseEntity.status(HttpStatus.OK).body(userCreationDTO)
         } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }

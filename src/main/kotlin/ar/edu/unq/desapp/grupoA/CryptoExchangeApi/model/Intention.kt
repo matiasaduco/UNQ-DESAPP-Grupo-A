@@ -1,16 +1,22 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
+import jakarta.persistence.*
 import java.time.LocalDate
 
+@Entity
 class Intention(
+    @ManyToOne(fetch = FetchType.EAGER)
     val crypto: Crypto,
     val criptoNominalQuantity: Int,
     val intentionPriceInArs: Float,
     val operation: IntentionType,
+    @ManyToOne(fetch = FetchType.EAGER)
     val user: User
 ) {
-    val creationDate: LocalDate = LocalDate.now()
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
+    val creationDate: LocalDate = LocalDate.now()
 }
 
 enum class IntentionType {

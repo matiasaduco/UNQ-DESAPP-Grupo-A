@@ -6,5 +6,5 @@ interface CryptoService {
 
     fun getCryptosPrice(): List<Crypto>
 
-    fun getCryptoPrice(symbol: String) : Crypto
+    fun getCryptoPrice(symbol: String): Crypto
 }

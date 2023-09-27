@@ -1,8 +1,15 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
-import java.time.LocalDate
+import jakarta.persistence.Entity
+import jakarta.persistence.GeneratedValue
+import jakarta.persistence.GenerationType
+import jakarta.persistence.Id
 import java.time.LocalDateTime
 
+@Entity
 class Crypto(val symbol: String, var price: Float) {
-    var time : LocalDateTime = LocalDateTime.now()
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id: Int? = null
+    var time: LocalDateTime = LocalDateTime.now()
 }

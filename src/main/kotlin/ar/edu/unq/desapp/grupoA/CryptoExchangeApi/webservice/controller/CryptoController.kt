@@ -12,12 +12,13 @@ import org.springframework.web.bind.annotation.RestController
 class CryptoController(private val cryptoService: CryptoService) {
 
     @GetMapping("/{cryptoSymbol}")
-    fun getCryptoPrice(@PathVariable cryptoSymbol : String): Crypto{
+    fun getCryptoPrice(@PathVariable cryptoSymbol: String): Crypto {
         return cryptoService.getCryptoPrice(cryptoSymbol)
     }
 
     @GetMapping("/prices")
-    fun getCryptosPrices() : List<Crypto>{
+    fun getCryptosPrices(): List<Crypto> {
         return cryptoService.getCryptosPrice()
     }
+
 }
