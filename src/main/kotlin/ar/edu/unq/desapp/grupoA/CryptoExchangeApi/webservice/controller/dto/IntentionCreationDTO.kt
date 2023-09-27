@@ -8,7 +8,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 class IntentionCreationDTO(
     val crypto: Crypto,
     val criptoNominalQuantity: Int,
-    val intentionPrice: Float,
+    val intentionPriceInArs: Float,
     val operation: IntentionType,
     val user: User,
 ) {
@@ -16,7 +16,7 @@ class IntentionCreationDTO(
         return Intention(
             crypto = this.crypto,
             criptoNominalQuantity = this.criptoNominalQuantity,
-            intentionPrice = this.intentionPrice,
+            intentionPriceInArs = this.intentionPriceInArs,
             operation = this.operation,
             user = this.user,
         )
@@ -27,7 +27,7 @@ class IntentionCreationDTO(
             return IntentionCreationDTO(
                 intention.crypto,
                 intention.criptoNominalQuantity,
-                intention.intentionPrice,
+                intention.intentionPriceInArs,
                 intention.operation,
                 intention.user
             )
