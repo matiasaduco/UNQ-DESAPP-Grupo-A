@@ -20,4 +20,12 @@ class IntentionServiceImpl : IntentionService {
         }
     }
 
+    override fun getAllIntentions(): MutableIterable<Intention> {
+        return try {
+            intentionRepository.findAllNotFinished()
+        } catch (e: Exception) {
+            throw Exception("Error al intentar recuperar las intenciones activas.")
+        }
+    }
+
 }

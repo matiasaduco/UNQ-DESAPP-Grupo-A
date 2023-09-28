@@ -13,5 +13,5 @@ class Transaction(
 }
 
 enum class TransactionState {
-    WAITING, TRANSFERED, CONFIRMED, CANCELED
+    WAITING, TRANSFERED, CONFIRMED, CANCELED, FINISHED
 }

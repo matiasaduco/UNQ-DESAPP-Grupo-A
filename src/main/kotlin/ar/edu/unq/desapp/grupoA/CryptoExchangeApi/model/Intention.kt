@@ -17,6 +17,7 @@ class Intention(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
     val creationDate: LocalDate = LocalDate.now()
+    var isFinished: Boolean = false
 }
 
 enum class IntentionType {
