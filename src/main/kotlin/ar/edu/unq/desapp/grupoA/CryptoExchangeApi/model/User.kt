@@ -22,17 +22,16 @@ class User(
     @Column(unique = true)
     var walletAddress: Int,
 ) {
-    var operations: Int = 0
-    var reputationPoints: Int = 0
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
+    var operations: Int = 0
+    var reputationPoints: Int = 0
 
-
-    fun getReputation() : Double {
+    fun getReputation(): Double {
         return this.reputationPoints / this.operations.toDouble()
     }
+
     fun cancelTransaction() {
         this.reputationPoints = (this.reputationPoints - 20).coerceAtLeast(0)
     }
