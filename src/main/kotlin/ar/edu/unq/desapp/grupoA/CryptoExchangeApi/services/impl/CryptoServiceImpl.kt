@@ -1,8 +1,10 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
+import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -12,6 +14,9 @@ class CryptoServiceImpl : CryptoService {
 
     @Autowired
     lateinit var binaceProxyService: BinancyProxyService
+
+    @Autowired
+    lateinit var cryptoRepository: CryptoRepository
 
     val cryptoSymbols: List<String> = listOf(
         "ALICEUSDT",
@@ -30,10 +35,13 @@ class CryptoServiceImpl : CryptoService {
         "AUDIOUSDT"
     )
 
+    @PostConstruct
     override fun getCryptosPrice(): List<Crypto> {
         val cryptos: MutableList<Crypto> = mutableListOf()
         cryptoSymbols.forEach {
-            cryptos.add(getCryptoPrice(it))
+            val crypto : Crypto = getCryptoPrice(it)
+            cryptos.add(crypto)
+            cryptoRepository.save(crypto)
         }
 
         return cryptos.toList()

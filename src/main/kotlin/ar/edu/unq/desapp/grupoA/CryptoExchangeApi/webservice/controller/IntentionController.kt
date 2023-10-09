@@ -25,7 +25,7 @@ class IntentionController(private val intentionService: IntentionService) {
             val intentionCreationDTO = IntentionCreationDTO.fromModel(intention)
             ResponseEntity.status(HttpStatus.OK).body(intentionCreationDTO)
         } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e)
+            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 

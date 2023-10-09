@@ -7,9 +7,10 @@ import jakarta.persistence.Id
 import java.time.LocalDateTime
 
 @Entity
-class Crypto(val symbol: String, var price: Float) {
+class Crypto(
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id: Int? = null
+    val symbol: String,
+    var price: Float) {
+
     var time: LocalDateTime = LocalDateTime.now()
 }
