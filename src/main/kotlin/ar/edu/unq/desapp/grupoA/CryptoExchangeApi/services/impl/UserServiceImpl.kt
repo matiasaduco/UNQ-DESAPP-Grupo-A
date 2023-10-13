@@ -47,7 +47,8 @@ class UserServiceImpl : UserService {
     }
 
     override fun getUserReport(id: Int): UserReport {
-        TODO("Not yet implemented")
+        val user = userRepository.findById(id)
+        return UserReport()
     }
 
     fun hasAValidName(name: String): Boolean {
