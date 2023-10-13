@@ -2,6 +2,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import jakarta.transaction.Transactional
@@ -45,7 +46,7 @@ class UserServiceImpl : UserService {
         TODO("Not yet implemented")
     }
 
-    override fun getUserReport(id: Int): User {
+    override fun getUserReport(id: Int): UserReport {
         TODO("Not yet implemented")
     }
 
