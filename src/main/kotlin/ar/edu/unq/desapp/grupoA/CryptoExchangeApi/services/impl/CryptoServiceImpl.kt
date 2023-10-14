@@ -50,7 +50,7 @@ class CryptoServiceImpl : CryptoService {
     override fun getCryptoPrice(symbol: String): Crypto {
         val entity: Crypto = binaceProxyService.getCryptoCurrencyValue(symbol)
 
-        entity.time = LocalDateTime.now()
+        entity.pricingTime = LocalDateTime.now()
 
         return entity
     }
