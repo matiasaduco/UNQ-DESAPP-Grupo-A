@@ -11,7 +11,8 @@ import java.time.format.DateTimeFormatter
 class IntentionDTO(
     val creationTime: String,
     val cryptoSymbol : String,
-    val criptoNominalQuantity: Int,
+    val cryptoNominalQuantity: Int,
+    val cryptoIntentionPrice: Float,
     val intentionPriceARS: Double,
     val operation: IntentionType,
     val name: String,
@@ -25,7 +26,8 @@ class IntentionDTO(
             return IntentionDTO(
                 creationTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(intention.creationDate),
                 cryptoSymbol = intention.crypto.symbol,
-                criptoNominalQuantity = intention.criptoNominalQuantity,
+                cryptoNominalQuantity = intention.criptoNominalQuantity,
+                cryptoIntentionPrice = intention.intentionCryptoPrice,
                 intentionPriceARS = intentionPriceARS,
                 operation = intention.operation,
                 name = intention.user.name,
