@@ -2,7 +2,6 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 class CryptoTest{
@@ -26,8 +25,8 @@ class CryptoTest{
     fun  initializeCriptoHasATime(){
         val now : LocalDateTime = LocalDateTime.now()
         val crypto : Crypto = Crypto("ALICEUSDT",0.768f )
-        crypto.time = now
-        Assertions.assertEquals(crypto.time, now)
+        crypto.pricingTime = now
+        Assertions.assertEquals(crypto.pricingTime, now)
     }
 
 }

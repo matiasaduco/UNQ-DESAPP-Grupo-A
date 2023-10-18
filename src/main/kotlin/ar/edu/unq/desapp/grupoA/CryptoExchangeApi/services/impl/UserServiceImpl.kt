@@ -13,7 +13,6 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 @Service
-@Transactional
 class UserServiceImpl : UserService {
 
     @Autowired
