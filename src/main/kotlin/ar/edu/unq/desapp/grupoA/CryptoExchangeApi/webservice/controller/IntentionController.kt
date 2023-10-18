@@ -38,6 +38,6 @@ class IntentionController(private val intentionService: IntentionService, privat
 
    @PostMapping("/{intentionId}")
    fun postTransaction(@PathVariable intentionId: Int, @RequestParam userID: Int) : Transaction{
-       return transactionService.createTransactation(intentionId, userID)
+       return transactionService.createTransaction(intentionId, userID)
     }
 }

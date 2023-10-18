@@ -6,20 +6,30 @@ import java.time.LocalDateTime
 
 @Entity
 class Transaction(
-    @JoinColumn(name = "idIntention", nullable = false)
-    @ManyToOne
+    @OneToOne
     val intention: Intention,
 
-    @OneToOne
+    @ManyToOne
     val userInterested: User
 ) {
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id : Int? = null
     var createdAt: LocalDateTime = LocalDateTime.now()
     var transactionState: TransactionState = TransactionState.WAITING
+    val address : String
+        get() {
+            if (intention.operation == IntentionType.BUY){
+            return intention.user.walletAddress.toString()
+            }else{
+                return intention.user.cvu.toString()
+            }
+        }
+
 }
 
 enum class TransactionState {
-    WAITING, TRANSFERED, CONFIRMED, CANCELED, FINISHED
+    WAITING, TRANSFERED, CANCELED, FINISHED
 }

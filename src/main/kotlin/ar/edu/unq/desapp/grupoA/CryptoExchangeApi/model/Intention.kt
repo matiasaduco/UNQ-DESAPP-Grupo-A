@@ -20,6 +20,14 @@ class Intention(
     @ManyToOne(fetch = FetchType.EAGER)
     val user: User
 ) {
+    fun canBeConfirmed(): Boolean {
+        if (operation == IntentionType.BUY){
+            return crypto.price < intentionCryptoPrice
+        }else{
+            return crypto.price > intentionCryptoPrice
+        }
+    }
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null

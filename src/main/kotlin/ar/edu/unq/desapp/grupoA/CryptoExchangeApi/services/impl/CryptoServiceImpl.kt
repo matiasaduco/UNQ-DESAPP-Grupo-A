@@ -6,9 +6,14 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
+@Configuration
+@EnableScheduling
 @Service
 class CryptoServiceImpl : CryptoService {
 
@@ -36,6 +41,7 @@ class CryptoServiceImpl : CryptoService {
     )
 
     @PostConstruct
+    @Scheduled(fixedDelay = 600000 )
     override fun getCryptosPrice(): List<Crypto> {
         val cryptos: MutableList<Crypto> = mutableListOf()
         cryptoSymbols.forEach {
