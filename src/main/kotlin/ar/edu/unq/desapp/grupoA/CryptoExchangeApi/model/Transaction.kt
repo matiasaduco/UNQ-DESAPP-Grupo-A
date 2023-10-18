@@ -1,15 +1,23 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
+import jakarta.persistence.*
 import java.time.LocalDate
+import java.time.LocalDateTime
 
+@Entity
 class Transaction(
+    @JoinColumn(name = "idIntention", nullable = false)
+    @ManyToOne
     val intention: Intention,
+
+    @OneToOne
     val userInterested: User
 ) {
-    var id: Int? = null
-    var createdAt: LocalDate? = null
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var id : Int? = null
+    var createdAt: LocalDateTime = LocalDateTime.now()
     var transactionState: TransactionState = TransactionState.WAITING
-    lateinit var address: String
 }
 
 enum class TransactionState {

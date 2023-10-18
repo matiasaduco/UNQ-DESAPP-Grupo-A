@@ -1,7 +1,8 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Intention
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Transaction
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionCreationDTO
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
 import org.springframework.http.HttpStatus
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/intention")
-class IntentionController(private val intentionService: IntentionService) {
+class IntentionController(private val intentionService: IntentionService, private val transactionService: TransactionService) {
     @PostMapping
     fun createIntention(
         @RequestBody intentionDTO: IntentionCreationDTO,
@@ -33,5 +34,10 @@ class IntentionController(private val intentionService: IntentionService) {
     @GetMapping
     fun getAllIntentions(): List<IntentionDTO> {
         return intentionService.getAllIntentions()
+    }
+
+   @PostMapping("/{intentionId}")
+   fun postTransaction(@PathVariable intentionId: Int, @RequestParam userID: Int) : Transaction{
+       return transactionService.createTransactation(intentionId, userID)
     }
 }
