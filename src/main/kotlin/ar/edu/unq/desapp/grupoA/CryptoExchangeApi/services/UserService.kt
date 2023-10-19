@@ -6,5 +6,5 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 interface UserService {
     fun signup(user: User): User
     fun login(): String
-    fun getUserReport(id: Int): UserReport
+    fun getUserReport(userId: Int): UserReport
 }

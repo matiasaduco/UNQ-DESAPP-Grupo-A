@@ -1,8 +1,11 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.TransactionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import jakarta.transaction.Transactional
@@ -17,6 +20,12 @@ class UserServiceImpl : UserService {
 
     @Autowired
     private lateinit var userRepository: UserRepository
+
+    @Autowired
+    private lateinit var transactionRepository: TransactionRepository
+
+    @Autowired
+    private lateinit var intentionRepository: IntentionRepository
 
     override fun signup(user: User): User {
         if (isValidateUser(user)) {
@@ -45,9 +54,25 @@ class UserServiceImpl : UserService {
         TODO("Not yet implemented")
     }
 
-    override fun getUserReport(id: Int): UserReport {
-        val user = userRepository.findById(id)
-        return UserReport()
+    override fun getUserReport(userId: Int): UserReport {
+        val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId)
+        var totalUSD = 0f
+        transactionsList.forEach { totalUSD += it.intention.intentionCryptoPrice }
+        val totalARG = totalUSD * 2
+        val activeList = mutableListOf<Active>()
+        val activesIntentions = intentionRepository.findAllSaleIntentionsByUserID(userId)
+        activesIntentions.forEach {
+            activeList.add(
+                Active(
+                    it.crypto.symbol,
+                    it.criptoNominalQuantity,
+                    it.intentionCryptoPrice,
+                    it.intentionCryptoPrice * 2
+                )
+            )
+        }
+
+        return UserReport(totalUSD, totalARG, activeList)
     }
 
     fun hasAValidName(name: String): Boolean {
