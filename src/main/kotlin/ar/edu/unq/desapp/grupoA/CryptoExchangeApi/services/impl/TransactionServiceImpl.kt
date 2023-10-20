@@ -7,7 +7,9 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Intenti
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.TransactionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionActionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -24,9 +26,11 @@ class TransactionServiceImpl : TransactionService {
     @Autowired
     lateinit var userRepository: UserRepository
 
+    @Autowired
+    lateinit var dolarProxyService: DolarProxyService
 
 
-    override fun createTransaction(intentionID: Int, userID: Int) : Transaction {
+    override fun createTransaction(intentionID: Int, userID: Int) : TransactionDTO {
         val intention = intentionRepository.findById(intentionID)
             .orElseThrow { Exception("Error al recuperar la intención ${intentionID}") }
 
@@ -41,15 +45,30 @@ class TransactionServiceImpl : TransactionService {
         val transaction : Transaction = Transaction(intention,user)
         val saveTransaction = transactionRepository.save(transaction)
 
-        return saveTransaction
+        val priceInArs = dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+
+
+        val transactionDTO: TransactionDTO = TransactionDTO(
+            saveTransaction.intention.crypto.symbol,
+            saveTransaction.intention.cryptoNominalQuantity,
+            saveTransaction.intention.intentionCryptoPrice,
+                priceInArs,
+                user.getFullname(),
+                user.getReputation(),
+                intention.addressToSend(),
+            ""
+
+        )
+
+        return transactionDTO
 
     }
 
 
 
-    override fun confirmTransaction(transactionActionDTO: TransactionActionDTO) {
-        val transaction = transactionRepository.findById(transactionActionDTO.transactionID)
-                .orElseThrow { Exception("Transacción ${transactionActionDTO.transactionID} no encontrada") }
+    override fun confirmTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+        val transaction = transactionRepository.findById(transactionID)
+                .orElseThrow { Exception("Transacción ${transactionID} no encontrada") }
 
 
         val user = userRepository.findFirstByEmail(transactionActionDTO.email)
@@ -60,19 +79,35 @@ class TransactionServiceImpl : TransactionService {
         }
 
         if (transaction.transactionState != TransactionState.TRANSFERED){
-            throw Exception("Transacción no fue contiuanda")
+            throw Exception("Transacción no fue continuada")
         }
 
-        confirmTransaction(transaction)
+        if (transaction.intention.canBeConfirmed()){
+            saveConfirmedTransaction(transaction)
+        }else{
+            transaction.transactionState = TransactionState.CANCELED
+            transactionRepository.save(transaction)
+            throw  Exception("Discrepancia en precio de la cripto")
+        }
 
+        val priceInArs = dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
 
-
+        return TransactionDTO(
+            transaction.intention.crypto.symbol,
+            transaction.intention.cryptoNominalQuantity,
+            transaction.intention.intentionCryptoPrice,
+            priceInArs,
+            transaction.userInterested.getFullname(),
+            transaction.userInterested.getReputation(),
+            transaction.intention.addressToSend(),
+            "Confirmar la recepción"
+        )
 
     }
 
 
 
-    private fun confirmTransaction(transaction: Transaction) {
+    private fun saveConfirmedTransaction(transaction: Transaction) {
         transaction.intention.isFinished = true
         transaction.transactionState = TransactionState.FINISHED
 
@@ -97,9 +132,9 @@ class TransactionServiceImpl : TransactionService {
         userRepository.save(intentionUser)
     }
 
-    override fun cancelTransaction(transactionActionDTO: TransactionActionDTO) {
-        val transaction = transactionRepository.findById(transactionActionDTO.transactionID)
-                .orElseThrow { Exception("Transacción ${transactionActionDTO.transactionID} no encontrada") }
+    override fun cancelTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+        val transaction = transactionRepository.findById(transactionID)
+                .orElseThrow { Exception("Transacción ${transactionID} no encontrada") }
 
 
         val userInterested = transaction.userInterested
@@ -117,11 +152,26 @@ class TransactionServiceImpl : TransactionService {
 
         transaction.transactionState = TransactionState.CANCELED
         transactionRepository.save(transaction)
+
+        val priceInArs = dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+
+        return TransactionDTO(
+            transaction.intention.crypto.symbol,
+            transaction.intention.cryptoNominalQuantity,
+            transaction.intention.intentionCryptoPrice,
+            priceInArs,
+            transaction.userInterested.getFullname(),
+            transaction.userInterested.getReputation(),
+            transaction.intention.addressToSend(),
+            "Cancelar"
+        )
     }
 
-    override fun advanceOnTransaction(transactionActionDTO: TransactionActionDTO) {
-        val transaction = transactionRepository.findById(transactionActionDTO.transactionID)
-                .orElseThrow { Exception("Transacción ${transactionActionDTO.transactionID} no encontrada") }
+
+
+    override fun advanceOnTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+        val transaction = transactionRepository.findById(transactionID)
+                .orElseThrow { Exception("Transacción ${transactionID} no encontrada") }
 
         val user = userRepository.findFirstByEmail(transactionActionDTO.email)
                 .orElseThrow { Exception("Usuario o contraseña erroneos") }
@@ -133,6 +183,19 @@ class TransactionServiceImpl : TransactionService {
         transaction.transactionState = TransactionState.TRANSFERED
         transactionRepository.save(transaction)
 
+        val priceInArs = dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+
+        return TransactionDTO(
+            transaction.intention.crypto.symbol,
+            transaction.intention.cryptoNominalQuantity,
+            transaction.intention.intentionCryptoPrice,
+            priceInArs,
+            transaction.userInterested.getFullname(),
+            transaction.userInterested.getReputation(),
+            transaction.intention.addressToSend(),
+            "Realice la transferencia"
+        )
     }
+
 
 }

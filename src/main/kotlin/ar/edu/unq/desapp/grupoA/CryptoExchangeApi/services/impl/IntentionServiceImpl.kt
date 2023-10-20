@@ -8,6 +8,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoR
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -24,9 +25,12 @@ class IntentionServiceImpl : IntentionService {
     @Autowired
     lateinit var cryptoRepository: CryptoRepository
 
+    @Autowired
+    lateinit var dolarProxyService: DolarProxyService
+
     override fun createIntention(
         cryptoName: String,
-        criptoNominalQuantity: Int,
+        criptoNominalQuantity: Double,
         intentionCryptoPrice: Float,
         operation: IntentionType,
         userId: Int
@@ -43,7 +47,7 @@ class IntentionServiceImpl : IntentionService {
 
             val intention = Intention(crypto, criptoNominalQuantity, intentionCryptoPrice, operation, user)
             intentionRepository.save(intention)
-            val dolarPrice : DolarPrice = DolarPrice.lastPrice()
+            val dolarPrice : DolarPrice = dolarProxyService.lastPrice
             val priceInArs : Double = (crypto.price * criptoNominalQuantity) * dolarPrice.v
 
             return IntentionDTO.fromModel(intention, priceInArs)
@@ -54,10 +58,10 @@ class IntentionServiceImpl : IntentionService {
 
     override fun getAllIntentions(): List<IntentionDTO> {
          return try {
-            val dolarPrice : DolarPrice = DolarPrice.lastPrice()
+            val dolarPrice : DolarPrice = dolarProxyService.lastPrice
             val intentions: MutableIterable<Intention> = intentionRepository.findAllNotFinished()
             val intentionsDTO : List<IntentionDTO> = intentions.map {
-                val priceInArs : Double = it.crypto.price * it.criptoNominalQuantity * dolarPrice.v
+                val priceInArs : Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
                 IntentionDTO.fromModel(it, priceInArs)
             }
              intentionsDTO

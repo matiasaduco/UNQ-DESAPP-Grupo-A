@@ -5,6 +5,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionCreationDTO
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
@@ -36,8 +37,13 @@ class IntentionController(private val intentionService: IntentionService, privat
         return intentionService.getAllIntentions()
     }
 
-   @PostMapping("/{intentionId}")
-   fun postTransaction(@PathVariable intentionId: Int, @RequestParam userID: Int) : Transaction{
-       return transactionService.createTransaction(intentionId, userID)
+   @PostMapping("/{intentionId}/transaction/{userID}")
+   fun postTransaction(@PathVariable intentionId: Int, @PathVariable userID: Int) : ResponseEntity<Any>{
+       return try{
+           val transactionDTO = transactionService.createTransaction(intentionId, userID)
+           ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
+       }catch (e : Exception){
+           ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+       }
     }
 }

@@ -1,30 +1,31 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model
 
 import jakarta.persistence.*
-import org.springframework.web.client.RestTemplate
-import java.io.IOException
-import java.net.URI
-import java.net.http.HttpClient
-import java.net.http.HttpRequest
-import java.net.http.HttpResponse
-import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
 class Intention(
-    @ManyToOne(fetch = FetchType.EAGER)
+        @ManyToOne(fetch = FetchType.EAGER)
     val crypto: Crypto,
-    val criptoNominalQuantity: Int,
-    val intentionCryptoPrice : Float,
-    val operation: IntentionType,
-    @ManyToOne(fetch = FetchType.EAGER)
+        val cryptoNominalQuantity: Double,
+        val intentionCryptoPrice: Float,
+        val operation: IntentionType,
+        @ManyToOne(fetch = FetchType.EAGER)
     val user: User
 ) {
     fun canBeConfirmed(): Boolean {
         if (operation == IntentionType.BUY){
-            return crypto.price < intentionCryptoPrice
+            return crypto.price <= intentionCryptoPrice
         }else{
-            return crypto.price > intentionCryptoPrice
+            return crypto.price >= intentionCryptoPrice
+        }
+    }
+
+    fun addressToSend(): String {
+        if (operation == IntentionType.BUY){
+            return user.walletAddress.toString()
+        }else{
+            return user.cvu.toString()
         }
     }
 
