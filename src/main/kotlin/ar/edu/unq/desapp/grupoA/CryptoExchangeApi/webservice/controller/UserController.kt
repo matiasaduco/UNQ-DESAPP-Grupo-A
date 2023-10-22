@@ -31,4 +31,7 @@ class UserController(private val userService: UserService) {
         return "Soy un usuario, creeme."
     }
 
+    @GetMapping("/report/{userId}")
+    fun getUserReport(@PathVariable userId: Int) = userService.getUserReport(userId)
+
 }

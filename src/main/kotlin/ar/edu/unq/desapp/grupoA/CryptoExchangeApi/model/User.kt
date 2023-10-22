@@ -28,8 +28,12 @@ class User(
     var operations: Int = 0
     var reputationPoints: Int = 0
 
-    fun getReputation(): Double {
-        return this.reputationPoints / this.operations.toDouble()
+    fun getReputation(): String {
+        if (this.operations == 0){
+            return "Sin operaciones"
+        }else{
+            return "" + this.reputationPoints / this.operations.toDouble()
+        }
     }
 
     fun cancelTransaction() {
