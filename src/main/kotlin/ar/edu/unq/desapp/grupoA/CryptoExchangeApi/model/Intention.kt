@@ -13,19 +13,20 @@ class Intention(
     @ManyToOne(fetch = FetchType.EAGER)
     val user: User
 ) {
+
     fun canBeConfirmed(): Boolean {
-        if (operation == IntentionType.BUY) {
-            return crypto.price <= intentionCryptoPrice
+        return if (operation == IntentionType.BUY) {
+            crypto.price <= intentionCryptoPrice
         } else {
-            return crypto.price >= intentionCryptoPrice
+            crypto.price >= intentionCryptoPrice
         }
     }
 
     fun addressToSend(): String {
-        if (operation == IntentionType.BUY) {
-            return user.walletAddress.toString()
+        return if (operation == IntentionType.BUY) {
+            user.walletAddress.toString()
         } else {
-            return user.cvu.toString()
+            user.cvu.toString()
         }
     }
 
