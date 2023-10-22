@@ -19,20 +19,6 @@ class DolarPrice (
         return "date: " + this.d + ", price: " + this.v
     }
 
-    companion object{
-        fun lastPrice() : DolarPrice{
-            var restTemplate : RestTemplate = RestTemplate()
-            var headers : HttpHeaders = HttpHeaders()
-            headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjg3NjcyMTEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWtzcGlvam9zb0BnbWFpbC5jb20ifQ.8_85V4p5IstbOFtco7dpg8h46m42ZwAh5Q0kx023MPZIWaUzS532T4F_cYZU0Z8yryP7TKCuNdBdZFj-fzl5vw")
 
-            var entity : HttpEntity<Void> = HttpEntity<Void>(headers)
-            var url : String = "https://api.estadisticasbcra.com/usd"
-
-            var response : ResponseEntity<Array<DolarPrice>> = restTemplate.exchange(url, HttpMethod.GET, entity, Array<DolarPrice>::class.java)
-            var prices : Array<DolarPrice> = response.body!!
-
-            return prices.last()
-        }
-    }
 
 }

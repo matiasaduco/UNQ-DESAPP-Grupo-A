@@ -28,6 +28,14 @@ class Transaction(
             }
         }
 
+
+    fun getAction():String{
+        if (intention.operation == IntentionType.BUY){
+            return ""
+        }else{
+            return ""
+        }
+    }
 }
 
 enum class TransactionState {

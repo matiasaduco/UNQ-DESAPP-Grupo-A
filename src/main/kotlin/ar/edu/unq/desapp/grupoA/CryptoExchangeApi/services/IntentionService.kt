@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 interface IntentionService {
     fun createIntention(
         crypto: String,
-        criptoNominalQuantity: Int,
+        criptoNominalQuantity: Double,
         intentionCryptoPrice: Float,
         operation: IntentionType,
         userId: Int

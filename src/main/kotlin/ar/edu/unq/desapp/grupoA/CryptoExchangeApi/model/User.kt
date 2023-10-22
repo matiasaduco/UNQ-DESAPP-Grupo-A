@@ -49,4 +49,8 @@ class User(
         this.reputationPoints += 5
         this.operations += 1
     }
+
+    fun getFullname(): String{
+        return this.name + " " + this.surname
+    }
 }
