@@ -4,6 +4,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncor
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
@@ -22,7 +23,7 @@ class UserServiceImpl : UserService {
                 userRepository.save(user)
                 user
             } catch (exception: Exception) {
-                throw Exception("Error al ingresar el usuario $user")
+                throw Exception("Error al ingresar el usuario ${user.getFullname()}, credenciales existentes")
             }
         } else {
             throw UserBodyIncorrectException()
@@ -45,6 +46,17 @@ class UserServiceImpl : UserService {
 
     override fun getUserReport(id: Int): User {
         TODO("Not yet implemented")
+    }
+
+    override fun getUsers(): List<UserDTO> {
+        val users = userRepository.findAll()
+        var usersDTO : MutableList<UserDTO> = mutableListOf()
+
+        users.forEach {
+            usersDTO.add( UserDTO.fromModel(it) )
+        }
+
+        return usersDTO
     }
 
     fun hasAValidName(name: String): Boolean {

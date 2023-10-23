@@ -3,6 +3,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.helpers
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import java.math.BigInteger
 
+
 class UserBuilder() {
     var name: String  = "no name"
     var surname: String = "no surname"

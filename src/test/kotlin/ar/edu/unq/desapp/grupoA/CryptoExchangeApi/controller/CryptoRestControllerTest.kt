@@ -30,8 +30,6 @@ class CryptoRestControllerTest {
     private lateinit var mvc : MockMvc
 
     //@MockBean
-    @Autowired
-    private lateinit var cryptoService: CryptoService
 
     @Autowired
     private lateinit var binancyProxyService: BinancyProxyService
