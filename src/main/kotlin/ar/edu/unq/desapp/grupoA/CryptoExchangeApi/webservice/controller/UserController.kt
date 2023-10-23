@@ -33,4 +33,7 @@ class UserController(private val userService: UserService) {
         return ResponseEntity.status(HttpStatus.OK).body(users)
     }
 
+    @GetMapping("/report/{userId}")
+    fun getUserReport(@PathVariable userId: Int) = userService.getUserReport(userId)
+
 }
