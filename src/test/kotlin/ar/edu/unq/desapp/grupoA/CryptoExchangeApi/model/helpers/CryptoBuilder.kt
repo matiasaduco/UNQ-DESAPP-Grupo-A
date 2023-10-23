@@ -4,7 +4,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class CriptoBuilder {
+class CryptoBuilder {
 
     var name : String= "no name"
     var price : Float= 0f
@@ -12,6 +12,7 @@ class CriptoBuilder {
 
     fun build() : Crypto {
         val crypto = Crypto(name,price)
+        crypto.pricingTime = this.time
         return crypto
     }
 

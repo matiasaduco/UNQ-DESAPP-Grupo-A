@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.service
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl.UserServiceImpl
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.UserController
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -13,18 +14,16 @@ import java.math.BigInteger
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension::class)
-
-
 class userServiceTest {
 
     @Autowired
     lateinit var userService : UserServiceImpl
 
+
     @Test
     fun checkThatNameIsValid(){
         val name : String = "Pedro"
         val result : Boolean = userService.hasAValidName(name)
-
         assertTrue(result)
     }
 

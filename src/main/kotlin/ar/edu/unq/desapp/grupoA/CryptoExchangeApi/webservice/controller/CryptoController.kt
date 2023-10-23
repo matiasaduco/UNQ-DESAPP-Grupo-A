@@ -2,6 +2,9 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
+import org.springframework.http.HttpStatus
+import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -12,13 +15,18 @@ import org.springframework.web.bind.annotation.RestController
 class CryptoController(private val cryptoService: CryptoService) {
 
     @GetMapping("/{cryptoSymbol}")
-    fun getCryptoPrice(@PathVariable cryptoSymbol: String): Crypto {
-        return cryptoService.getCryptoPrice(cryptoSymbol)
+    fun getCryptoPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> {
+        try {
+            return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
+            }
+        catch (e: Exception){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
+        }
     }
 
     @GetMapping("/prices")
-    fun getCryptosPrices(): List<Crypto> {
-        return cryptoService.getCryptosPrice()
+    fun getCryptosPrices(): ResponseEntity<Any> {
+        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptosPrice())
     }
 
 }
