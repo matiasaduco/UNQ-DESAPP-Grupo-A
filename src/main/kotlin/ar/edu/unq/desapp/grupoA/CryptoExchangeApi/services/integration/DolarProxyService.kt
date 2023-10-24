@@ -24,7 +24,7 @@ class DolarProxyService {
     @PostConstruct
     fun getLastDolarPrice(){
         var headers : HttpHeaders = HttpHeaders()
-        headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk2OTg2MTUsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWNhc19ib3NxdWVzQGhvdG1haWwuY29tIn0.HRypQCYjnV0toibdnpifxluN4RRFSsNhxJiiMmixTFJwoms2hGUFxmoaCfSUZMyYR3802zgQPOTOWzTQPKe9LA")
+        headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk3MDIzNjEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWNhc0Bob3RtYWlsLmNvbSJ9.fZ04yaP3xE7WkWr3lbmovn0HxqLROVE20tV5csuZUdpk7V1ikqNXpM_4fW7v5lBHjaYi7SMFsSfe_jREl3r44w")
 
         var entity : HttpEntity<Void> = HttpEntity<Void>(headers)
 

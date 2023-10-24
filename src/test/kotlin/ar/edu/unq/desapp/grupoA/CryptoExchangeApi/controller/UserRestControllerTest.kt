@@ -30,7 +30,6 @@ import java.util.*
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
 @SpringBootTest
-@ContextConfiguration(classes = arrayOf(Configuration::class))
 class UserRestControllerTest {
 
     @Autowired
