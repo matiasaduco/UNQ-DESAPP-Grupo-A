@@ -24,20 +24,18 @@ import java.math.BigInteger
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
-import java.time.LocalDateTime
-import java.util.*
+import java.time.LocalDate
+
 
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
 @SpringBootTest
+@ContextConfiguration(classes = arrayOf(Configuration::class))
 class UserRestControllerTest {
 
     @Autowired
     private lateinit var mockMvc : MockMvc
 
-
-    @Autowired
-    private lateinit var userRepository: UserRepository
 
     @Autowired
     private lateinit var jdbcTemplate : JdbcTemplate
@@ -161,8 +159,8 @@ class UserRestControllerTest {
 
 
         var dayFromTo = mapOf(
-            "from" to Date(2023,10,10),
-            "to" to Date(2023,10,30),
+            "from" to java.sql.Date.valueOf(LocalDate.of(2023,10,10)),
+            "to" to  java.sql.Date.valueOf(LocalDate.of(2023,10,30))
 
 
         )
@@ -171,7 +169,8 @@ class UserRestControllerTest {
             .content(jacksonObjectMapper().writeValueAsString(dayFromTo)))
             .andExpect(status().isOk)
             .andExpect(jsonPath("$.totalUSD").value(0f))
-            .andExpect(jsonPath("$.totalARG").value(0f))
+            .andExpect(jsonPath("$.totalARG").value(1000f))
+            //Mocked value
             .andExpect(jsonPath("$.activeList", IsCollectionWithSize.hasSize<Array<Any>>(0)))
 
     }

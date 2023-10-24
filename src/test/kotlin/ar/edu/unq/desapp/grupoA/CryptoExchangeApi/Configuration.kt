@@ -3,11 +3,10 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.helpers.CryptoBuilder
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import org.hamcrest.Matchers
 import org.mockito.Mockito
-import org.mockito.Mockito.anyString
-import org.mockito.Mockito.mock
-import org.springframework.beans.factory.annotation.Qualifier
+import org.mockito.Mockito.*
 import org.springframework.boot.test.context.TestConfiguration
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Primary
@@ -32,5 +31,14 @@ class Configuration {
 
 
         return binancyProxyService
+    }
+
+    @Bean
+    @Primary
+    fun dolarProxyService() : DolarProxyService{
+        var dolarProxyService: DolarProxyService = mock(DolarProxyService::class.java)
+
+        Mockito.`when`(dolarProxyService.getPriceInArs(anyDouble())).thenReturn(1000.0)
+        return dolarProxyService
     }
 }
