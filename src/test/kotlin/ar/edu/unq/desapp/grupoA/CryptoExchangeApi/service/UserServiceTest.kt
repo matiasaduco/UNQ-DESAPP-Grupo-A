@@ -1,21 +1,23 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.service
 
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.Configuration
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl.UserServiceImpl
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ContextConfiguration
 import org.springframework.test.context.junit.jupiter.SpringExtension
 import java.math.BigInteger
+
 
 @SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(SpringExtension::class)
-
-
-class userServiceTest {
+@ContextConfiguration(classes = arrayOf(Configuration::class))
+class UserServiceTest {
 
     @Autowired
     lateinit var userService : UserServiceImpl
@@ -24,8 +26,7 @@ class userServiceTest {
     fun checkThatNameIsValid(){
         val name : String = "Pedro"
         val result : Boolean = userService.hasAValidName(name)
-
-        assertTrue(result)
+        Assertions.assertTrue(result)
     }
 
     @Test
@@ -33,7 +34,7 @@ class userServiceTest {
         val name : String = "@}+dadobalnáldw lqwe jop+dk p´dl as´dppddakdas"
         val result : Boolean = userService.hasAValidName(name)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -41,7 +42,7 @@ class userServiceTest {
         val email : String = "alvarezlucas@gmail.com"
         val result : Boolean = userService.hasAValidEmail(email)
 
-        assertTrue(result)
+        Assertions.assertTrue(result)
     }
 
     @Test
@@ -49,7 +50,7 @@ class userServiceTest {
         val email : String = "alvarezlucas.com"
         val result : Boolean = userService.hasAValidEmail(email)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -57,7 +58,7 @@ class userServiceTest {
         val email : String = "alvarezlucas@gmail"
         val result : Boolean = userService.hasAValidEmail(email)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -65,7 +66,7 @@ class userServiceTest {
         val address : String = "Chascomus 1041"
         val result : Boolean = userService.hasAValidAddress(address)
 
-        assertTrue(result)
+        Assertions.assertTrue(result)
     }
 
     @Test
@@ -73,7 +74,7 @@ class userServiceTest {
         val address : String = "Chascomus 1041, Florencio Varela"
         val result : Boolean = userService.hasAValidAddress(address)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -81,7 +82,7 @@ class userServiceTest {
         val password : String = "Contraseña@"
         val result : Boolean = userService.hasAValidPassword(password)
 
-        assertTrue(result)
+        Assertions.assertTrue(result)
 
     }
 
@@ -90,7 +91,7 @@ class userServiceTest {
         val password : String = "Contraseña"
         val result : Boolean = userService.hasAValidPassword(password)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -98,7 +99,7 @@ class userServiceTest {
         val password : String = "contraseña@"
         val result : Boolean = userService.hasAValidPassword(password)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -106,7 +107,7 @@ class userServiceTest {
         val password : String = "CONTRASEÑA@"
         val result : Boolean = userService.hasAValidPassword(password)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -114,7 +115,7 @@ class userServiceTest {
         val cvu : BigInteger = BigInteger("1234567891234567891234")
         val result : Boolean = userService.hasAValidCVU(cvu)
 
-        assertTrue(result)
+        Assertions.assertTrue(result)
     }
 
     @Test
@@ -122,7 +123,7 @@ class userServiceTest {
         val cvu : BigInteger = BigInteger("12345")
         val result : Boolean = userService.hasAValidCVU(cvu)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 
     @Test
@@ -130,7 +131,7 @@ class userServiceTest {
         val walletAddress : Int = 12345678
         val result : Boolean = userService.hasAValidWalletAddress(walletAddress)
 
-        assertTrue(result)
+        Assertions.assertTrue(result)
     }
 
     @Test
@@ -138,6 +139,6 @@ class userServiceTest {
         val walletAddress : Int = 12345
         val result : Boolean = userService.hasAValidWalletAddress(walletAddress)
 
-        assertFalse(result)
+        Assertions.assertFalse(result)
     }
 }

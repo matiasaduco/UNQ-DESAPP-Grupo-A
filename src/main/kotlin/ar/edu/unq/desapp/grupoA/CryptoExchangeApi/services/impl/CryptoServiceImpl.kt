@@ -1,0 +1,82 @@
+package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
+
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
+import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.context.annotation.Configuration
+import org.springframework.scheduling.annotation.EnableScheduling
+import org.springframework.scheduling.annotation.Scheduled
+import org.springframework.stereotype.Service
+import java.time.LocalDateTime
+
+@Configuration
+@EnableScheduling
+@Service
+class CryptoServiceImpl : CryptoService {
+
+    @Autowired
+    lateinit var binaceProxyService: BinancyProxyService
+
+    @Autowired
+    lateinit var cryptoRepository: CryptoRepository
+
+    val cryptoSymbols: List<String> = listOf(
+        "ALICEUSDT",
+        "MATICUSDT",
+        "AXSUSDT",
+        "AAVEUSDT",
+        "ATOMUSDT",
+        "NEOUSDT",
+        "DOTUSDT",
+        "ETHUSDT",
+        "CAKEUSDT",
+        "BTCUSDT",
+        "BNBUSDT",
+        "ADAUSDT",
+        "TRXUSDT",
+        "AUDIOUSDT"
+    )
+
+    override fun getCryptosPrice(): List<CryptoDTO> {
+        val cryptos = cryptoRepository.findAll()
+        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach{
+            cryptosDTO.add(CryptoDTO.fromModel(it))
+        }
+
+        return cryptosDTO
+    }
+
+    override fun getCryptoPrice(symbol: String): CryptoDTO {
+        val crypto = cryptoRepository.findById(symbol)
+            .orElseThrow{throw Exception("Nombre de cripto desconocido")}
+        return CryptoDTO.fromModel(crypto)
+    }
+
+    @PostConstruct
+    @Scheduled(fixedDelay = 600000 )
+    fun getCryptosPriceFromBinance(): List<Crypto> {
+        val cryptos: MutableList<Crypto> = mutableListOf()
+        cryptoSymbols.forEach {
+            val crypto : Crypto = getCryptoPriceFromBinance(it)
+            cryptos.add(crypto)
+            cryptoRepository.save(crypto)
+        }
+
+        return cryptos.toList()
+    }
+
+    private fun getCryptoPriceFromBinance(symbol: String): Crypto {
+
+        val entity: Crypto = binaceProxyService.getCryptoCurrencyValue(symbol)
+
+        entity.pricingTime = LocalDateTime.now()
+
+        return entity
+    }
+
+}
