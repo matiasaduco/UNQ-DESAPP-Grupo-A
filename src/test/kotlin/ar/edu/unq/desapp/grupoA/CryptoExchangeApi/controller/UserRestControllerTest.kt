@@ -17,6 +17,8 @@ import java.math.BigInteger
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
+import java.time.LocalDateTime
+import java.util.*
 
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
@@ -99,5 +101,21 @@ class UserRestControllerTest {
             .andExpect(jsonPath("$[1].name").value("Matias Aduco"))
             .andExpect(jsonPath("$[1].numberOfOperations").value(0))
             .andExpect(jsonPath("$[1].reputation").value("Sin operaciones"))
+    }
+
+    @Test
+    fun getUserReport(){
+        var body = mapOf(
+            "from" to Date(2023,10,10),
+            "to" to Date(2023,10,30),
+        )
+        mockMvc.perform(get("/user/report/1")
+            .contentType(MediaType.APPLICATION_JSON)
+            .content(jacksonObjectMapper().writeValueAsString(body)))
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$.totalUSD").value(0f))
+            .andExpect(jsonPath("$.totalARG").value(0f))
+            .andExpect(jsonPath("$.activeList", IsCollectionWithSize.hasSize<Array<Any>>(0)))
+
     }
 }
