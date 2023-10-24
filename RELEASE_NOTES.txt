@@ -1,11 +1,11 @@
 ---------------------------------------------------------------------
-TAG Entrega 1 1.0
+TAG Entrega 2 1.0
 ---------------------------------------------------------------------
 NEW FEATURES:
-* Models of User, Transaction, Intention, Critpo.
-* User registration service.
-* Github actions build integration.
-* Swagger3 integration.
+* User, Crypto, Intention and Transaction Service , Controller and Repository
+* H2-database
+* Dolar price
+* Test controller End to End
 
 NOTES :
 * Spring Security has been disable.
