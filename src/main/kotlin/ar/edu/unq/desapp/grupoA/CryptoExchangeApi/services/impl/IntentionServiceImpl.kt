@@ -59,7 +59,7 @@ class IntentionServiceImpl : IntentionService {
     override fun getAllIntentions(): List<IntentionDTO> {
          return try {
             val dolarPrice : DolarPrice = dolarProxyService.lastPrice
-            val intentions: MutableIterable<Intention> = intentionRepository.findAllNotFinished()
+            val intentions: List<Intention> = intentionRepository.findAllNotFinished()
             val intentionsDTO : List<IntentionDTO> = intentions.map {
                 val priceInArs : Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
                 IntentionDTO.fromModel(it, priceInArs)
