@@ -2,16 +2,20 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.TransactionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
+import java.time.LocalDateTime
+import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -26,6 +30,10 @@ class UserServiceImpl : UserService {
 
     @Autowired
     private lateinit var intentionRepository: IntentionRepository
+
+    @Autowired
+    private lateinit var dolarProxyService: DolarProxyService
+
 
     override fun signup(user: User): User {
         if (isValidateUser(user)) {
@@ -54,20 +62,21 @@ class UserServiceImpl : UserService {
         TODO("Not yet implemented")
     }
 
-    override fun getUserReport(userId: Int): UserReport {
-        val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId)
+    override fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate : LocalDateTime): UserReport {
+        val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId, firstDate,lastDate)
         var totalUSD = 0f
         transactionsList.forEach { totalUSD += it.intention.intentionCryptoPrice }
-        val totalARG = totalUSD * 2
+
+        val totalARG = dolarProxyService.getPriceInArs(totalUSD.toDouble()).toFloat()
         val activeList = mutableListOf<Active>()
         val activesIntentions = intentionRepository.findAllSaleIntentionsByUserID(userId)
         activesIntentions.forEach {
             activeList.add(
                 Active(
                     it.crypto.symbol,
-                    it.criptoNominalQuantity,
+                    it.cryptoNominalQuantity,
                     it.intentionCryptoPrice,
-                    it.intentionCryptoPrice * 2
+                    dolarProxyService.getPriceInArs(it.intentionCryptoPrice * it.cryptoNominalQuantity).toFloat()
                 )
             )
         }

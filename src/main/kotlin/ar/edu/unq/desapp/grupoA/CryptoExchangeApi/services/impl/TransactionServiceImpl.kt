@@ -40,15 +40,19 @@ class TransactionServiceImpl : TransactionService {
             throw Exception("Usuario no puede crear transacción de su propia intención")
         }
 
+        if (intention.isFinished){
+            throw Exception("Intención ha finalizado")
+        }
+
         val transaction = Transaction(intention, user)
         val saveTransaction = transactionRepository.save(transaction)
 
         val priceInArs =
-            dolarProxyService.getPriceInArs(transaction.intention.criptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+            dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
 
         val transactionDTO = TransactionDTO(
             saveTransaction.intention.crypto.symbol,
-            saveTransaction.intention.criptoNominalQuantity,
+            saveTransaction.intention.cryptoNominalQuantity,
             saveTransaction.intention.intentionCryptoPrice,
             priceInArs,
             user.getFullname(),
@@ -84,11 +88,11 @@ class TransactionServiceImpl : TransactionService {
         }
 
         val priceInArs =
-            dolarProxyService.getPriceInArs(transaction.intention.criptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+            dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
 
         return TransactionDTO(
             transaction.intention.crypto.symbol,
-            transaction.intention.criptoNominalQuantity,
+            transaction.intention.cryptoNominalQuantity,
             transaction.intention.intentionCryptoPrice,
             priceInArs,
             transaction.userInterested.getFullname(),
@@ -140,11 +144,11 @@ class TransactionServiceImpl : TransactionService {
         transactionRepository.save(transaction)
 
         val priceInArs =
-            dolarProxyService.getPriceInArs(transaction.intention.criptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+            dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
 
         return TransactionDTO(
             transaction.intention.crypto.symbol,
-            transaction.intention.criptoNominalQuantity,
+            transaction.intention.cryptoNominalQuantity,
             transaction.intention.intentionCryptoPrice,
             priceInArs,
             transaction.userInterested.getFullname(),
@@ -169,11 +173,11 @@ class TransactionServiceImpl : TransactionService {
         transactionRepository.save(transaction)
 
         val priceInArs =
-            dolarProxyService.getPriceInArs(transaction.intention.criptoNominalQuantity * transaction.intention.intentionCryptoPrice)
+            dolarProxyService.getPriceInArs(transaction.intention.cryptoNominalQuantity * transaction.intention.intentionCryptoPrice)
 
         return TransactionDTO(
             transaction.intention.crypto.symbol,
-            transaction.intention.criptoNominalQuantity,
+            transaction.intention.cryptoNominalQuantity,
             transaction.intention.intentionCryptoPrice,
             priceInArs,
             transaction.userInterested.getFullname(),

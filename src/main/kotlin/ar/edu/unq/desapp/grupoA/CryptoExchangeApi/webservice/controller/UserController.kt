@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDateTime
 
 @RestController
 @RequestMapping("/user")
@@ -28,12 +29,12 @@ class UserController(private val userService: UserService) {
     }
 
     @GetMapping()
-    fun getUser(): ResponseEntity<Any> {
+    fun getUsers(): ResponseEntity<Any> {
         val users = userService.getUsers()
         return ResponseEntity.status(HttpStatus.OK).body(users)
     }
 
     @GetMapping("/report/{userId}")
-    fun getUserReport(@PathVariable userId: Int) = userService.getUserReport(userId)
+    fun getUserReport(@PathVariable userId: Int) = userService.getUserReport(userId, LocalDateTime.MIN, LocalDateTime.MAX)
 
 }

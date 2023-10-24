@@ -11,7 +11,6 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
-
 @Configuration
 @EnableScheduling
 @Service
@@ -25,7 +24,7 @@ class DolarProxyService {
     @PostConstruct
     fun getLastDolarPrice(){
         var headers : HttpHeaders = HttpHeaders()
-        headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjg3NjcyMTEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWtzcGlvam9zb0BnbWFpbC5jb20ifQ.8_85V4p5IstbOFtco7dpg8h46m42ZwAh5Q0kx023MPZIWaUzS532T4F_cYZU0Z8yryP7TKCuNdBdZFj-fzl5vw")
+        headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk2NDg5NDEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJob2xhQGdtYWlsLmNvbSJ9._3kjD8GOCUiIVU7dy7NfInZV4X1FGaQi5amcvue9aZ26ImeDmm5qhnPjw6GY_tAru4hidzBKrrCifsqxAPuWdw")
 
         var entity : HttpEntity<Void> = HttpEntity<Void>(headers)
 

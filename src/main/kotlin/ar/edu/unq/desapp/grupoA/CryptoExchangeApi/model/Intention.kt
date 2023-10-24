@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 class Intention(
     @ManyToOne(fetch = FetchType.EAGER)
     val crypto: Crypto,
-    val criptoNominalQuantity: Double,
+    val cryptoNominalQuantity: Double,
     val intentionCryptoPrice: Float,
     val operation: IntentionType,
     @ManyToOne(fetch = FetchType.EAGER)
