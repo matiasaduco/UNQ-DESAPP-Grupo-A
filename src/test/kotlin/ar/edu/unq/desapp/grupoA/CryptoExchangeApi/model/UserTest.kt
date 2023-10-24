@@ -127,8 +127,8 @@ class UserTest {
     fun getUserReputation(){
         val user : User = UserBuilder().build()
         user.acceptTransactionUnder30minutes()
-        val reputation : Double = (10 / 1).toDouble() // 10 points over 1 operation
+        val reputation  = (10 / 1).toDouble() // 10 points over 1 operation
 
-        Assertions.assertEquals(user.getReputation() , reputation)
+        Assertions.assertEquals(user.getReputation() , reputation.toString())
     }
 }
