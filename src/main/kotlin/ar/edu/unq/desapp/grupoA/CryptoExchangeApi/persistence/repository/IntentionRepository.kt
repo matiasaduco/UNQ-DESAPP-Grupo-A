@@ -10,6 +10,6 @@ interface IntentionRepository : CrudRepository<Intention, Int> {
     @Query(value = "SELECT i FROM Intention i WHERE NOT i.isFinished")
     fun findAllNotFinished(): MutableIterable<Intention>
 
-    @Query(value = "SELECT i FROM Intention i WHERE i.user.id = :userId")
+    @Query(value = "SELECT i FROM Intention i WHERE i.user.id = :userId AND i.operation = 1 AND i.isFinished = FALSE ")
     fun findAllSaleIntentionsByUserID(userId: Int): MutableIterable<Intention>
 }

@@ -15,31 +15,40 @@ import org.springframework.web.bind.annotation.RestController
 class TransactionController(private val transactionService: TransactionService) {
 
     @PostMapping("/{transactionID}/advance")
-    fun advanceOnTransaction(@RequestBody transactionActionDTO: TransactionActionDTO, @PathVariable transactionID: Int): ResponseEntity<Any>{
-        return try{
+    fun advanceOnTransaction(
+        @RequestBody transactionActionDTO: TransactionActionDTO,
+        @PathVariable transactionID: Int
+    ): ResponseEntity<Any> {
+        return try {
             val transactionDTO = transactionService.advanceOnTransaction(transactionActionDTO, transactionID)
             ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        }catch (e : Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 
     @PostMapping("/{transactionID}/confirm")
-    fun confirmTransaction(@RequestBody transactionActionDTO: TransactionActionDTO, @PathVariable transactionID: Int): ResponseEntity<Any>{
-        return try{
-            val transactionDTO = transactionService.confirmTransaction(transactionActionDTO,transactionID)
+    fun confirmTransaction(
+        @RequestBody transactionActionDTO: TransactionActionDTO,
+        @PathVariable transactionID: Int
+    ): ResponseEntity<Any> {
+        return try {
+            val transactionDTO = transactionService.confirmTransaction(transactionActionDTO, transactionID)
             ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        }catch (e : Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }
 
     @PostMapping("/{transactionID}/cancel")
-    fun cancelTransaction(@RequestBody transactionActionDTO: TransactionActionDTO, @PathVariable transactionID: Int): ResponseEntity<Any>{
-        return try{
-            val transactionDTO = transactionService.cancelTransaction(transactionActionDTO,transactionID)
+    fun cancelTransaction(
+        @RequestBody transactionActionDTO: TransactionActionDTO,
+        @PathVariable transactionID: Int
+    ): ResponseEntity<Any> {
+        return try {
+            val transactionDTO = transactionService.cancelTransaction(transactionActionDTO, transactionID)
             ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        }catch (e : Exception){
+        } catch (e: Exception) {
             ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
         }
     }

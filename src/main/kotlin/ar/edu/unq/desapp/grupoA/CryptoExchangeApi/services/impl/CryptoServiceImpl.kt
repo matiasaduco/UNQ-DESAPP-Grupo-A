@@ -4,6 +4,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Configuration
@@ -40,12 +41,28 @@ class CryptoServiceImpl : CryptoService {
         "AUDIOUSDT"
     )
 
+    override fun getCryptosPrice(): List<CryptoDTO> {
+        val cryptos = cryptoRepository.findAll()
+        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach{
+            cryptosDTO.add(CryptoDTO.fromModel(it))
+        }
+
+        return cryptosDTO
+    }
+
+    override fun getCryptoPrice(symbol: String): CryptoDTO {
+        val crypto = cryptoRepository.findById(symbol)
+            .orElseThrow{throw Exception("Nombre de cripto desconocido")}
+        return CryptoDTO.fromModel(crypto)
+    }
+
     @PostConstruct
     @Scheduled(fixedDelay = 600000 )
-    override fun getCryptosPrice(): List<Crypto> {
+    fun getCryptosPriceFromBinance(): List<Crypto> {
         val cryptos: MutableList<Crypto> = mutableListOf()
         cryptoSymbols.forEach {
-            val crypto : Crypto = getCryptoPrice(it)
+            val crypto : Crypto = getCryptoPriceFromBinance(it)
             cryptos.add(crypto)
             cryptoRepository.save(crypto)
         }
@@ -53,7 +70,8 @@ class CryptoServiceImpl : CryptoService {
         return cryptos.toList()
     }
 
-    override fun getCryptoPrice(symbol: String): Crypto {
+    private fun getCryptoPriceFromBinance(symbol: String): Crypto {
+
         val entity: Crypto = binaceProxyService.getCryptoCurrencyValue(symbol)
 
         entity.pricingTime = LocalDateTime.now()
