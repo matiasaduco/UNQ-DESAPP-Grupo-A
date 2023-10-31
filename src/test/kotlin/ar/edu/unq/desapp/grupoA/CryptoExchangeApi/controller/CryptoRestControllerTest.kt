@@ -38,7 +38,7 @@ class CryptoRestControllerTest {
     @Test
     fun getCryptoBySymbol(){
 
-        var crypto = binancyProxyService.getCryptoCurrencyValue("")
+        var crypto = binancyProxyService.getAllCryptoCurrencyValues("").get(0)
 
         mvc.perform(get("/crypto/ALICEUSDT"))
             .andDo(print())

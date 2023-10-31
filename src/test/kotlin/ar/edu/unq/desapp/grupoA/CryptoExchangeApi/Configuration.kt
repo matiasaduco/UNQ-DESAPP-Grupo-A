@@ -26,7 +26,7 @@ class Configuration {
 
         var binancyProxyService: BinancyProxyService = mock(BinancyProxyService::class.java)
 
-        Mockito.`when`(binancyProxyService.getCryptoCurrencyValue(anyString())).thenReturn(crypto, crypto2)
+        Mockito.`when`(binancyProxyService.getAllCryptoCurrencyValues(anyString())).thenReturn(arrayOf(crypto,crypto2))
 
 
 
