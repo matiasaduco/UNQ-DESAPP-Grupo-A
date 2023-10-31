@@ -24,22 +24,22 @@ class CryptoServiceImpl : CryptoService {
     @Autowired
     lateinit var cryptoRepository: CryptoRepository
 
-    val cryptoSymbols: List<String> = listOf(
-        "ALICEUSDT",
-        "MATICUSDT",
-        "AXSUSDT",
-        "AAVEUSDT",
-        "ATOMUSDT",
-        "NEOUSDT",
-        "DOTUSDT",
-        "ETHUSDT",
-        "CAKEUSDT",
-        "BTCUSDT",
-        "BNBUSDT",
-        "ADAUSDT",
-        "TRXUSDT",
-        "AUDIOUSDT"
-    )
+    val cryptoSymbols: String = "[\"ALICEUSDT\"," +
+            "\"MATICUSDT\","+
+            "\"AXSUSDT\","+
+            "\"AAVEUSDT\","+
+            "\"ATOMUSDT\","+
+            "\"NEOUSDT\","+
+            "\"DOTUSDT\","+
+            "\"ETHUSDT\","+
+            "\"CAKEUSDT\","+
+            "\"BTCUSDT\","+
+            "\"BNBUSDT\","+
+            "\"ADAUSDT\","+
+            "\"TRXUSDT\","+
+            "\"AUDIOUSDT\""+
+            "]"
+
 
     override fun getCryptosPrice(): List<CryptoDTO> {
         val cryptos = cryptoRepository.findAll()
@@ -59,15 +59,13 @@ class CryptoServiceImpl : CryptoService {
 
     @PostConstruct
     @Scheduled(fixedDelay = 600000 )
-    fun getCryptosPriceFromBinance(): List<Crypto> {
-        val cryptos: MutableList<Crypto> = mutableListOf()
-        cryptoSymbols.forEach {
-            val crypto : Crypto = getCryptoPriceFromBinance(it)
-            cryptos.add(crypto)
-            cryptoRepository.save(crypto)
+    fun getCryptosPriceFromBinance(){
+        val cryptos = binaceProxyService.getAllCryptoCurrencyValues(cryptoSymbols)
+
+        cryptos.forEach {
+            cryptoRepository.save(it)
         }
 
-        return cryptos.toList()
     }
 
     private fun getCryptoPriceFromBinance(symbol: String): Crypto {
