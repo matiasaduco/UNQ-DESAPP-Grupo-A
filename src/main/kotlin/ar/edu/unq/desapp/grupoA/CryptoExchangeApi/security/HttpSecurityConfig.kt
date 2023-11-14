@@ -18,6 +18,7 @@ class HttpSecurityConfig {
                 authorize(anyRequest, permitAll)
             }
             csrf { disable() }
+            headers { frameOptions { disable() } }
             httpBasic {  }
         }
         return http.build()

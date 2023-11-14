@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.CryptoId
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
@@ -52,7 +53,7 @@ class CryptoServiceImpl : CryptoService {
     }
 
     override fun getCryptoPrice(symbol: String): CryptoDTO {
-        val crypto = cryptoRepository.findById(symbol)
+        val crypto = cryptoRepository.findById(CryptoId(symbol, LocalDateTime.now().hour))
             .orElseThrow{throw Exception("Nombre de cripto desconocido")}
         return CryptoDTO.fromModel(crypto)
     }

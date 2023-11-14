@@ -1,8 +1,11 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.LogInfoAspectCustomPoincut
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -14,8 +17,12 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/crypto")
 class CryptoController(private val cryptoService: CryptoService) {
 
+    var logger : Logger = LoggerFactory.getLogger(LogInfoAspectCustomPoincut::class.java)
+
     @GetMapping("/{cryptoSymbol}")
     fun getCryptoPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> {
+        logger.info("/////// Inside getCryptoPrice() method")
+        logger.info("/////// Parameters: CryptoSymbol = " + cryptoSymbol)
         try {
             return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
             }

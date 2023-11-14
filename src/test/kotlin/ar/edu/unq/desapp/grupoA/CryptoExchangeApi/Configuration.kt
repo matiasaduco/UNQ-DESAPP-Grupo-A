@@ -21,12 +21,15 @@ class Configuration {
     @Primary
     fun binanceProxyService() : BinancyProxyService{
         val now = LocalDateTime.now()
-        val crypto : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(10.0f).withTime(now).build()
-        val crypto2 : Crypto = CryptoBuilder().withName("MATICUSDT").withPrice(11.0f).withTime(now).build()
+        val before = now.minusHours(1)
+        val crypto : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(9.0f).withTime(before).build()
+        val crypto2 : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(10.0f).withTime(now).build()
+        val crypto3 : Crypto = CryptoBuilder().withName("MATICUSDT").withPrice(11.0f).withTime(now).build()
+
 
         var binancyProxyService: BinancyProxyService = mock(BinancyProxyService::class.java)
 
-        Mockito.`when`(binancyProxyService.getAllCryptoCurrencyValues(anyString())).thenReturn(arrayOf(crypto,crypto2))
+        Mockito.`when`(binancyProxyService.getAllCryptoCurrencyValues(anyString())).thenReturn(arrayOf(crypto,crypto2,crypto3))
 
 
 
