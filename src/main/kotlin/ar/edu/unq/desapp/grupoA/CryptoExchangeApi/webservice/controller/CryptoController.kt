@@ -17,12 +17,9 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/crypto")
 class CryptoController(private val cryptoService: CryptoService) {
 
-    var logger : Logger = LoggerFactory.getLogger(LogInfoAspectCustomPoincut::class.java)
 
     @GetMapping("/{cryptoSymbol}")
     fun getCryptoPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> {
-        logger.info("/////// Inside getCryptoPrice() method")
-        logger.info("/////// Parameters: CryptoSymbol = " + cryptoSymbol)
         try {
             return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
             }

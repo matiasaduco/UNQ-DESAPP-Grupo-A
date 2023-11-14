@@ -6,6 +6,7 @@ import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
 import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
+import org.aspectj.lang.reflect.MethodSignature
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
@@ -33,10 +34,23 @@ class LogInfoAspectCustomPoincut {
 
         var start : Long = System.currentTimeMillis()
 
+
+        var methodSig : MethodSignature = joinPoint.signature as MethodSignature
+        var params = methodSig.parameterNames
+
+        var arguments = joinPoint.args
+        var paramsAndValues = "/////// Parameters: "
+
+        for (i in params.indices){
+            paramsAndValues += params.get(i) + " = " + arguments.get(i) + " "
+        }
+        logger.info("/////// Inside " + joinPoint.signature.name + "() method")
+        logger.info(paramsAndValues)
+
         var proceed : Any = joinPoint.proceed()
         var executionTime = System.currentTimeMillis() - start
 
-        logger.info("/////// LogExecutionTimeAspectAnnotation - " + joinPoint.getSignature() + " executed in " + executionTime + "ms ")
+        logger.info("/////// LogExecutionTimeAspectAnnotation - " + joinPoint.signature + " executed in " + executionTime + "ms ")
         return proceed
     }
 
