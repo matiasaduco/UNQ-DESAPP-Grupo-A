@@ -8,6 +8,8 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyPr
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.cache.annotation.CachePut
+import org.springframework.cache.annotation.Cacheable
 import org.springframework.context.annotation.Configuration
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
@@ -42,6 +44,7 @@ class CryptoServiceImpl : CryptoService {
             "]"
 
 
+    @Cacheable("Cryptos")
     override fun getCryptosPrice(): List<CryptoDTO> {
         val cryptos = cryptoRepository.findAll()
         val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
@@ -60,13 +63,17 @@ class CryptoServiceImpl : CryptoService {
 
     @PostConstruct
     @Scheduled(fixedDelay = 600000 )
-    fun getCryptosPriceFromBinance(){
+    @CachePut("Cryptos")
+    fun getCryptosPriceFromBinance(): List<CryptoDTO>{
         val cryptos = binaceProxyService.getAllCryptoCurrencyValues(cryptoSymbols)
+        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
 
         cryptos.forEach {
             cryptoRepository.save(it)
+            cryptosDTO.add(CryptoDTO.fromModel(it))
         }
 
+        return cryptosDTO
     }
 
     private fun getCryptoPriceFromBinance(symbol: String): Crypto {

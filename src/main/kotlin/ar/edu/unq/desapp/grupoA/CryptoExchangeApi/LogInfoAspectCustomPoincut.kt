@@ -23,17 +23,12 @@ class LogInfoAspectCustomPoincut {
     @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller..*(..))")
     fun methodsStarterServicePointcut(){}
 
-    @Before("methodsStarterServicePointcut()")
-    fun beforeMethods(){
-        var executionStart : Timestamp = Timestamp(System.currentTimeMillis())
-        logger.info("/////// Timestamp: "+ executionStart + " /////");
-    }
-
     @Around("methodsStarterServicePointcut()")
     fun logExecutionTimeAnnotation(joinPoint: ProceedingJoinPoint): Any? {
+        //Agregar catch try
+        //Mandar al loguer el stacktrace
 
         var start : Long = System.currentTimeMillis()
-
 
         var methodSig : MethodSignature = joinPoint.signature as MethodSignature
         var params = methodSig.parameterNames
@@ -45,7 +40,9 @@ class LogInfoAspectCustomPoincut {
             paramsAndValues += params.get(i) + " = " + arguments.get(i) + " "
         }
         logger.info("/////// Inside " + joinPoint.signature.name + "() method")
+        logger.info("/////// Timestamp: "+ start + " /////");
         logger.info(paramsAndValues)
+
 
         var proceed : Any = joinPoint.proceed()
         var executionTime = System.currentTimeMillis() - start

@@ -2,7 +2,6 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
@@ -15,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -53,7 +51,7 @@ class UserServiceImpl : UserService {
                 hasAValidName(user.surname) &&
                 hasAValidEmail(user.email) &&
                 hasAValidAddress(user.address) &&
-                hasAValidPassword(user.password) &&
+                hasAValidPassword(user.userpassword) &&
                 hasAValidCVU(user.cvu) &&
                 hasAValidWalletAddress(user.walletAddress)
     }

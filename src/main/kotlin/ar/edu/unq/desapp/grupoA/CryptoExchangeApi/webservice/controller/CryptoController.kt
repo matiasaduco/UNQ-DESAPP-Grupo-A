@@ -1,11 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.LogInfoAspectCustomPoincut
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping

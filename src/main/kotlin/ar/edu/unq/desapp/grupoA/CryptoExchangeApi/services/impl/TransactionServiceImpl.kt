@@ -71,7 +71,7 @@ class TransactionServiceImpl : TransactionService {
         val user = userRepository.findFirstByEmail(transactionActionDTO.email)
             .orElseThrow { Exception("Usuario o contraseña erroneos") }
 
-        if (user.password != transactionActionDTO.password || user.id != transaction.intention.user.id) {
+        if (user.userpassword != transactionActionDTO.password || user.id != transaction.intention.user.id) {
             throw Exception("Usuario o contraseña erroneos")
         }
 
@@ -130,10 +130,10 @@ class TransactionServiceImpl : TransactionService {
         val userInterested = transaction.userInterested
         val intentionUser = transaction.intention.user
 
-        if (userInterested.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        if (userInterested.email == transactionActionDTO.email && userInterested.userpassword == transactionActionDTO.password) {
             userInterested.cancelTransaction()
             userRepository.save(userInterested)
-        } else if (intentionUser.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        } else if (intentionUser.email == transactionActionDTO.email && userInterested.userpassword == transactionActionDTO.password) {
             intentionUser.cancelTransaction()
             userRepository.save(intentionUser)
         } else {
@@ -165,7 +165,7 @@ class TransactionServiceImpl : TransactionService {
         val user = userRepository.findFirstByEmail(transactionActionDTO.email)
             .orElseThrow { Exception("Usuario o contraseña erroneos") }
 
-        if (user.password != transaction.userInterested.password) {
+        if (user.userpassword != transaction.userInterested.userpassword) {
             throw Exception("Usuario o contraseña erroneos")
         }
 
