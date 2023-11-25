@@ -1,7 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionActionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionActionDTO
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable

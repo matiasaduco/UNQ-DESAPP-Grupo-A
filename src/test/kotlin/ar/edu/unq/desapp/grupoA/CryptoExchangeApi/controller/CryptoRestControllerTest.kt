@@ -1,7 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.Configuration
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
@@ -18,7 +17,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.format.DateTimeFormatter
 
-//@WebMvcTest(CryptoController::class)
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -28,8 +26,6 @@ class CryptoRestControllerTest {
 
     @Autowired
     private lateinit var mvc : MockMvc
-
-    //@MockBean
 
     @Autowired
     private lateinit var binancyProxyService: BinancyProxyService

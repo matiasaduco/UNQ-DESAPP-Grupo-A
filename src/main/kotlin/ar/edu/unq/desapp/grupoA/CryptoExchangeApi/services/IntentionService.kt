@@ -2,7 +2,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Intention
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.IntentionType
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.IntentionDTO
 import org.springframework.stereotype.Service
 
 @Service

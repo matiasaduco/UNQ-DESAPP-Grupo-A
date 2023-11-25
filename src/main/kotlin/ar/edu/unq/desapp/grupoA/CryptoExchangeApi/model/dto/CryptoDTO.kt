@@ -1,4 +1,4 @@
-package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto
+package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import java.time.format.DateTimeFormatter
@@ -10,7 +10,7 @@ class CryptoDTO (
 ){
 
     companion object{
-        fun fromModel(crypto: Crypto): CryptoDTO{
+        fun fromModel(crypto: Crypto): CryptoDTO {
             return CryptoDTO(
                 crypto.symbol,
                 crypto.price,
