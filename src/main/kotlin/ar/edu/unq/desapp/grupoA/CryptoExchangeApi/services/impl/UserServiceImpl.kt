@@ -10,7 +10,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Transac
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger

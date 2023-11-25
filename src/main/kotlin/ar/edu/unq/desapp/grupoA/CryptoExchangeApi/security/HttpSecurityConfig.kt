@@ -2,6 +2,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.security
 
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
+import org.springframework.http.HttpMethod
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.invoke
@@ -15,6 +16,9 @@ class HttpSecurityConfig {
     fun apiFilterChain(http: HttpSecurity): SecurityFilterChain{
         http.invoke {
             authorizeRequests {
+                authorize("/transaction/**", authenticated)
+                authorize(HttpMethod.GET, "/intention", permitAll)
+                authorize("/intention/**",authenticated)
                 authorize(anyRequest, permitAll)
             }
             csrf { disable() }
