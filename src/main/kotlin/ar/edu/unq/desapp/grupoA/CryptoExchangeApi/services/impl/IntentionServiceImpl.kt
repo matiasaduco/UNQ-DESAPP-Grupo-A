@@ -9,7 +9,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Intenti
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.IntentionDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 

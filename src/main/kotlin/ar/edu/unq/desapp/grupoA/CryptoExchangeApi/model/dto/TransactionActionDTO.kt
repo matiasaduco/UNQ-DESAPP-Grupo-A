@@ -1,4 +1,4 @@
-package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto
+package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto
 
 class TransactionActionDTO(
         val email: String,

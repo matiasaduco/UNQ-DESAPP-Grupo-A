@@ -2,9 +2,9 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserCreationDTO
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.fromDayTo
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserCreationDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.fromDayTo
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
@@ -38,9 +38,10 @@ class UserController(private val userService: UserService) {
     }
 
     @GetMapping("/report/{userId}")
-    fun getUserReport(@PathVariable userId: Int,@RequestBody fromDayTo: fromDayTo): UserReport {
+    fun getUserReport(@PathVariable userId: Int,@RequestBody fromDayTo: fromDayTo): ResponseEntity<Any> {
         val from = fromDayTo.from.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
         val to = fromDayTo.to.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime()
-        return userService.getUserReport(userId, from, to)
+        var report = userService.getUserReport(userId, from, to)
+        return ResponseEntity.status(HttpStatus.OK).body(report)
     }
 }
