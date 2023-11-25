@@ -43,7 +43,7 @@ class CryptoServiceImpl : CryptoService {
 
 
     override fun getCryptosPrice(): List<CryptoDTO> {
-        val cryptos = cryptoRepository.findAll()
+        val cryptos = cryptoRepository.findByPricingHour(LocalDateTime.now().hour)
         val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
         cryptos.forEach{
             cryptosDTO.add(CryptoDTO.fromModel(it))
@@ -67,6 +67,15 @@ class CryptoServiceImpl : CryptoService {
             cryptoRepository.save(it)
         }
 
+    }
+
+    override fun getCryptoDayPrice(symbol: String): List<CryptoDTO> {
+        val cryptos = cryptoRepository.findBySymbol(symbol)
+        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach{
+            cryptosDTO.add(CryptoDTO.fromModel(it))
+        }
+        return cryptosDTO
     }
 
     private fun getCryptoPriceFromBinance(symbol: String): Crypto {

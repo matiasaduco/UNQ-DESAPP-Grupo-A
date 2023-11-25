@@ -20,11 +20,11 @@ class Configuration {
     @Bean
     @Primary
     fun binanceProxyService() : BinancyProxyService{
-        val now = LocalDateTime.now()
-        val before = now.minusHours(1)
+        val date = LocalDateTime.of(2023,10,12,20,30)
+        val before = date.minusHours(1)
         val crypto : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(9.0f).withTime(before).build()
-        val crypto2 : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(10.0f).withTime(now).build()
-        val crypto3 : Crypto = CryptoBuilder().withName("MATICUSDT").withPrice(11.0f).withTime(now).build()
+        val crypto2 : Crypto = CryptoBuilder().withName("ALICEUSDT").withPrice(10.0f).withTime(date).build()
+        val crypto3 : Crypto = CryptoBuilder().withName("MATICUSDT").withPrice(11.0f).withTime(date).build()
 
 
         var binancyProxyService: BinancyProxyService = mock(BinancyProxyService::class.java)
