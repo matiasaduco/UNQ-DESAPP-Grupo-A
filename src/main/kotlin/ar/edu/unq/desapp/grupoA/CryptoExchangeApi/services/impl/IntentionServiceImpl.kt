@@ -1,9 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.DolarPrice
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Intention
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.IntentionType
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.*
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
@@ -12,6 +9,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProx
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.IntentionDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class IntentionServiceImpl : IntentionService {
@@ -36,7 +34,7 @@ class IntentionServiceImpl : IntentionService {
         userId: Int
     ): IntentionDTO {
         return try {
-            val crypto = cryptoRepository.findById(cryptoName)
+            val crypto = cryptoRepository.findById(CryptoId(cryptoName, LocalDateTime.now().hour))
                 .orElseThrow { throw Exception("Error al recuperar la Crypto ${cryptoName}.") }
             if (! isPriceInside5Percent(intentionCryptoPrice, crypto)){
                 throw Exception("Precio de intención fuera de rango")

@@ -10,4 +10,6 @@ interface CryptoService {
     fun getCryptosPrice():List<CryptoDTO>
 
     fun getCryptoPrice(symbol: String): CryptoDTO
+
+    fun getCryptoDayPrice(symbol: String): List<CryptoDTO>
 }

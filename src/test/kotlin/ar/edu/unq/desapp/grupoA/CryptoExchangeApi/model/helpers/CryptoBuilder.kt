@@ -13,6 +13,7 @@ class CryptoBuilder {
     fun build() : Crypto {
         val crypto = Crypto(name,price)
         crypto.pricingTime = this.time
+        crypto.pricingHour = this.time.hour
         return crypto
     }
 

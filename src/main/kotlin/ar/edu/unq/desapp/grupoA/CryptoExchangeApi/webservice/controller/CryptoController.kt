@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 class CryptoController(private val cryptoService: CryptoService) {
 
     @GetMapping("/{cryptoSymbol}")
-    fun getCryptoPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> {
+    fun getCryptoPrice(@PathVariable cryptoSymbol: String ): ResponseEntity<Any> {
         try {
             return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
             }
@@ -27,4 +27,8 @@ class CryptoController(private val cryptoService: CryptoService) {
         return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptosPrice())
     }
 
+    @GetMapping("/{cryptoSymbol}/day")
+    fun getCryptoDailyPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any>{
+        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoDayPrice(cryptoSymbol))
+    }
 }

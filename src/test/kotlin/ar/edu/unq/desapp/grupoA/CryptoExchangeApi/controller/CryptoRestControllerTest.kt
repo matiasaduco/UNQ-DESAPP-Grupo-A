@@ -64,4 +64,18 @@ class CryptoRestControllerTest {
             .andExpect(jsonPath("$[1].price").value(11.0f))
 
     }
+
+    @Test
+    fun getCryptoDailyPrice(){
+        mvc.perform(get("/crypto/ALICEUSDT/day"))
+            .andDo(print())
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$",hasSize<Array<Any>>(2)))
+            .andExpect(jsonPath("$[0].symbol").value("ALICEUSDT"))
+            .andExpect(jsonPath("$[0].price").value(9.0f))
+            .andExpect(jsonPath("$[0].pricingTime").value("12-10-2023 19:30"))
+            .andExpect(jsonPath("$[1].symbol").value("ALICEUSDT"))
+            .andExpect(jsonPath("$[1].price").value(10.0f))
+            .andExpect(jsonPath("$[1].pricingTime").value("12-10-2023 20:30"))
+    }
 }
