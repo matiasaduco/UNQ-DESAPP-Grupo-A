@@ -22,13 +22,9 @@ class UserController(private val userService: UserService) {
 
     @PostMapping
     fun signup(@RequestBody userDTO: UserCreationDTO): ResponseEntity<Any> {
-        return try {
             val user = userDTO.toModel()
             val userCreationDTO = UserDTO.fromModel(userService.signup(user))
-            ResponseEntity.status(HttpStatus.OK).body(userCreationDTO)
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+            return ResponseEntity.status(HttpStatus.OK).body(userCreationDTO)
     }
 
     @GetMapping()

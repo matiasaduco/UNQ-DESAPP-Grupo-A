@@ -1,17 +1,14 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi
 
 import org.aspectj.lang.ProceedingJoinPoint
-import org.aspectj.lang.annotation.After
 import org.aspectj.lang.annotation.Around
 import org.aspectj.lang.annotation.Aspect
-import org.aspectj.lang.annotation.Before
 import org.aspectj.lang.annotation.Pointcut
 import org.aspectj.lang.reflect.MethodSignature
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.core.annotation.Order
 import org.springframework.stereotype.Component
-import java.sql.Timestamp
 
 @Aspect
 @Component
@@ -20,14 +17,12 @@ class LogInfoAspectCustomPoincut {
 
     var logger : Logger = LoggerFactory.getLogger(LogInfoAspectCustomPoincut::class.java)
 
-    @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller..*(..))")
+    @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller..*(..)) && ! execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.exceptionHandler..*(..))")
     fun methodsStarterServicePointcut(){}
 
-    @Before("methodsStarterServicePointcut()")
-    fun beforeMethods(){
-        var executionStart : Timestamp = Timestamp(System.currentTimeMillis())
-        logger.info("/////// Timestamp: "+ executionStart + " /////");
-    }
+    @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.exceptionHandler..*(..))")
+    fun errorExceptionPointcut(){}
+
 
     @Around("methodsStarterServicePointcut()")
     fun logExecutionTimeAnnotation(joinPoint: ProceedingJoinPoint): Any? {
@@ -44,6 +39,7 @@ class LogInfoAspectCustomPoincut {
         for (i in params.indices){
             paramsAndValues += params.get(i) + " = " + arguments.get(i) + " "
         }
+        logger.info("/////// Timestamp: "+ start + " /////");
         logger.info("/////// Inside " + joinPoint.signature.name + "() method")
         logger.info(paramsAndValues)
 
@@ -54,4 +50,12 @@ class LogInfoAspectCustomPoincut {
         return proceed
     }
 
+    @Around("errorExceptionPointcut()")
+    fun logExecutionErrorInfo(joinPoint: ProceedingJoinPoint): Any? {
+        var argument = joinPoint.args
+        logger.error("Unexpected error", argument.get(0))
+
+        var proceed: Any = joinPoint.proceed()
+        return proceed
+    }
 }
