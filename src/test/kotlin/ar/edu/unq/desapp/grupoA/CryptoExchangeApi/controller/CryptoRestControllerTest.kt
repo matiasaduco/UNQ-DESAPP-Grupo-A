@@ -1,7 +1,6 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.Configuration
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
 import org.hamcrest.CoreMatchers
 import org.hamcrest.collection.IsCollectionWithSize.hasSize
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultHandlers.*
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.*
 import java.time.format.DateTimeFormatter
 
-//@WebMvcTest(CryptoController::class)
 @ExtendWith(SpringExtension::class)
 @AutoConfigureMockMvc
 @SpringBootTest
@@ -29,8 +27,6 @@ class CryptoRestControllerTest {
 
     @Autowired
     private lateinit var mvc : MockMvc
-
-    //@MockBean
 
     @Autowired
     private lateinit var binancyProxyService: BinancyProxyService
@@ -71,5 +67,19 @@ class CryptoRestControllerTest {
             .andExpect(jsonPath("$[1].symbol").value("MATICUSDT"))
             .andExpect(jsonPath("$[1].price").value(11.0f))
 
+    }
+
+    @Test
+    fun getCryptoDailyPrice(){
+        mvc.perform(get("/crypto/ALICEUSDT/day"))
+            .andDo(print())
+            .andExpect(status().isOk)
+            .andExpect(jsonPath("$",hasSize<Array<Any>>(2)))
+            .andExpect(jsonPath("$[0].symbol").value("ALICEUSDT"))
+            .andExpect(jsonPath("$[0].price").value(9.0f))
+            .andExpect(jsonPath("$[0].pricingTime").value("12-10-2023 19:30"))
+            .andExpect(jsonPath("$[1].symbol").value("ALICEUSDT"))
+            .andExpect(jsonPath("$[1].price").value(10.0f))
+            .andExpect(jsonPath("$[1].pricingTime").value("12-10-2023 20:30"))
     }
 }

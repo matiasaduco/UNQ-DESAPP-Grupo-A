@@ -1,4 +1,4 @@
-package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto
+package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Intention
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.IntentionType
@@ -18,7 +18,7 @@ class IntentionDTO(
 ){
 
     companion object{
-        fun fromModel(intention: Intention, intentionPriceARS: Double):IntentionDTO{
+        fun fromModel(intention: Intention, intentionPriceARS: Double): IntentionDTO {
             return IntentionDTO(
                 creationTime = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss").format(intention.creationDate),
                 cryptoSymbol = intention.crypto.symbol,

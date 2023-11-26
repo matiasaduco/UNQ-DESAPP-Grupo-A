@@ -2,10 +2,11 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.CryptoId
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.CryptoDoesntExistException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.CryptoDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.CryptoDTO
 import jakarta.annotation.PostConstruct
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.cache.annotation.CachePut
@@ -46,7 +47,7 @@ class CryptoServiceImpl : CryptoService {
 
     @Cacheable("Cryptos")
     override fun getCryptosPrice(): List<CryptoDTO> {
-        val cryptos = cryptoRepository.findAll()
+        val cryptos = cryptoRepository.findByPricingHour(LocalDateTime.now().hour)
         val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
         cryptos.forEach{
             cryptosDTO.add(CryptoDTO.fromModel(it))
@@ -57,7 +58,7 @@ class CryptoServiceImpl : CryptoService {
 
     override fun getCryptoPrice(symbol: String): CryptoDTO {
         val crypto = cryptoRepository.findById(CryptoId(symbol, LocalDateTime.now().hour))
-            .orElseThrow{throw Exception("Nombre de cripto desconocido")}
+            .orElseThrow{throw CryptoDoesntExistException() }
         return CryptoDTO.fromModel(crypto)
     }
 
@@ -76,13 +77,14 @@ class CryptoServiceImpl : CryptoService {
         return cryptosDTO
     }
 
-    private fun getCryptoPriceFromBinance(symbol: String): Crypto {
-
-        val entity: Crypto = binaceProxyService.getCryptoCurrencyValue(symbol)
-
-        entity.pricingTime = LocalDateTime.now()
-
-        return entity
+    override fun getCryptoDayPrice(symbol: String): List<CryptoDTO> {
+        val cryptos = cryptoRepository.findBySymbol(symbol).ifEmpty { throw CryptoDoesntExistException() }
+        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach{
+            cryptosDTO.add(CryptoDTO.fromModel(it))
+        }
+        return cryptosDTO
     }
+    
 
 }

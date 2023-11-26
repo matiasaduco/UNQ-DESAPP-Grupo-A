@@ -1,12 +1,13 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.*
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.*
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.IntentionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.IntentionDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -35,13 +36,14 @@ class IntentionServiceImpl : IntentionService {
     ): IntentionDTO {
         return try {
             val crypto = cryptoRepository.findById(CryptoId(cryptoName, LocalDateTime.now().hour))
-                .orElseThrow { throw Exception("Error al recuperar la Crypto ${cryptoName}.") }
+                .orElseThrow { throw CryptoDoesntExistException() }
+
             if (! isPriceInside5Percent(intentionCryptoPrice, crypto)){
-                throw Exception("Precio de intención fuera de rango")
+                throw PriceOutOfRangeException("Precio de intención fuera de rango")
             }
 
             val user = userRepository.findById(userId)
-                .orElseThrow { throw Exception("Error al recuperar el usuario con id ${userId}.") }
+                .orElseThrow { throw UserDosentExists() }
 
             val intention = Intention(crypto, criptoNominalQuantity, intentionCryptoPrice, operation, user)
             intentionRepository.save(intention)
@@ -49,23 +51,21 @@ class IntentionServiceImpl : IntentionService {
             val priceInArs : Double = (crypto.price * criptoNominalQuantity) * dolarPrice.v
 
             return IntentionDTO.fromModel(intention, priceInArs)
+
         } catch (e: Exception) {
-            throw Exception("Error al ingresar la intención de ${operation}.")
+            throw IntentionCannotBeCreatedException(operation.toString())
         }
     }
 
     override fun getAllIntentions(): List<IntentionDTO> {
-         return try {
-            val dolarPrice : DolarPrice = dolarProxyService.lastPrice
-            val intentions: List<Intention> = intentionRepository.findAllNotFinished()
-            val intentionsDTO : List<IntentionDTO> = intentions.map {
-                val priceInArs : Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
-                IntentionDTO.fromModel(it, priceInArs)
+
+        val dolarPrice : DolarPrice = dolarProxyService.lastPrice
+        val intentions: List<Intention> = intentionRepository.findAllNotFinished()
+        val intentionsDTO : List<IntentionDTO> =
+            intentions.map { val priceInArs : Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
+            IntentionDTO.fromModel(it, priceInArs)
             }
-             intentionsDTO
-        } catch (e: Exception) {
-            throw Exception("Error al intentar recuperar las intenciones activas.")
-        }
+        return intentionsDTO
     }
 
 

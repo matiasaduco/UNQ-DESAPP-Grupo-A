@@ -6,8 +6,6 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
-import org.springframework.security.core.GrantedAuthority
-import org.springframework.security.core.userdetails.UserDetails
 import java.math.BigInteger
 
 @Entity
@@ -18,12 +16,10 @@ class User(
     @Column(unique = true)
     var email: String,
     var address: String,
-    var userpassword: String,
-    @Column(unique = true)
+    var password: String,
     var cvu: BigInteger,
-    @Column(unique = true)
     var walletAddress: Int,
-) : UserDetails{
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var id: Int? = null
@@ -54,33 +50,5 @@ class User(
 
     fun getFullname(): String{
         return this.name + " " + this.surname
-    }
-
-    override fun getAuthorities(): MutableCollection<out GrantedAuthority> {
-        TODO("Not yet implemented")
-    }
-
-    override fun getPassword(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun getUsername(): String {
-        TODO("Not yet implemented")
-    }
-
-    override fun isAccountNonExpired(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isAccountNonLocked(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isCredentialsNonExpired(): Boolean {
-        TODO("Not yet implemented")
-    }
-
-    override fun isEnabled(): Boolean {
-        TODO("Not yet implemented")
     }
 }

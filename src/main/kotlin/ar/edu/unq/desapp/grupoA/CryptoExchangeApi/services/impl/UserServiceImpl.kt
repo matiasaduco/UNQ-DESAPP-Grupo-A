@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserAlreadyExists
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
@@ -9,7 +10,7 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Transac
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
@@ -34,13 +35,13 @@ class UserServiceImpl : UserService {
 
 
     override fun signup(user: User): User {
-        if (isValidateUser(user)) {
-            return try {
+        userRepository.findFirstByEmail(user.email)
+        if ( !userRepository.findFirstByEmail(user.email).isEmpty ){
+            throw UserAlreadyExists()
+        }
+        else if (isValidateUser(user)) {
                 userRepository.save(user)
-                user
-            } catch (exception: Exception) {
-                throw Exception("Error al ingresar el usuario ${user.getFullname()}, credenciales existentes")
-            }
+                return user
         } else {
             throw UserBodyIncorrectException()
         }
