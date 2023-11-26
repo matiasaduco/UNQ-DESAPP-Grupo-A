@@ -2,6 +2,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.CryptoId
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.CryptoDoesntExistException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.CryptoService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.BinancyProxyService
@@ -54,7 +55,7 @@ class CryptoServiceImpl : CryptoService {
 
     override fun getCryptoPrice(symbol: String): CryptoDTO {
         val crypto = cryptoRepository.findById(CryptoId(symbol, LocalDateTime.now().hour))
-            .orElseThrow{throw Exception("Nombre de cripto desconocido")}
+            .orElseThrow{throw CryptoDoesntExistException() }
         return CryptoDTO.fromModel(crypto)
     }
 
@@ -70,21 +71,13 @@ class CryptoServiceImpl : CryptoService {
     }
 
     override fun getCryptoDayPrice(symbol: String): List<CryptoDTO> {
-        val cryptos = cryptoRepository.findBySymbol(symbol)
+        val cryptos = cryptoRepository.findBySymbol(symbol).ifEmpty { throw CryptoDoesntExistException() }
         val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
         cryptos.forEach{
             cryptosDTO.add(CryptoDTO.fromModel(it))
         }
         return cryptosDTO
     }
-
-    private fun getCryptoPriceFromBinance(symbol: String): Crypto {
-
-        val entity: Crypto = binaceProxyService.getCryptoCurrencyValue(symbol)
-
-        entity.pricingTime = LocalDateTime.now()
-
-        return entity
-    }
+    
 
 }

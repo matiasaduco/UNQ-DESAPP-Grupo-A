@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserAlreadyExists
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
@@ -36,13 +37,13 @@ class UserServiceImpl : UserService {
 
 
     override fun signup(user: User): User {
-        if (isValidateUser(user)) {
-            return try {
+        userRepository.findFirstByEmail(user.email)
+        if ( !userRepository.findFirstByEmail(user.email).isEmpty ){
+            throw UserAlreadyExists()
+        }
+        else if (isValidateUser(user)) {
                 userRepository.save(user)
-                user
-            } catch (exception: Exception) {
-                throw Exception("Error al ingresar el usuario ${user.getFullname()}, credenciales existentes")
-            }
+                return user
         } else {
             throw UserBodyIncorrectException()
         }

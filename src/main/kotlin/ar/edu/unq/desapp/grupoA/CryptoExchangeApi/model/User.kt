@@ -17,9 +17,7 @@ class User(
     var email: String,
     var address: String,
     var password: String,
-    @Column(unique = true)
     var cvu: BigInteger,
-    @Column(unique = true)
     var walletAddress: Int,
 ) {
     @Id

@@ -14,12 +14,7 @@ class CryptoController(private val cryptoService: CryptoService) {
 
     @GetMapping("/{cryptoSymbol}")
     fun getCryptoPrice(@PathVariable cryptoSymbol: String ): ResponseEntity<Any> {
-        try {
-            return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
-            }
-        catch (e: Exception){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
     }
 
     @GetMapping("/prices")
