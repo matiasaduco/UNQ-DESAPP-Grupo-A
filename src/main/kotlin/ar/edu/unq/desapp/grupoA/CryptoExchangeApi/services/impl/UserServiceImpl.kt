@@ -3,7 +3,6 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserAlreadyExists
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -39,7 +37,7 @@ class UserServiceImpl : UserService {
     override fun signup(user: User): User {
         userRepository.findFirstByEmail(user.email)
         if ( !userRepository.findFirstByEmail(user.email).isEmpty ){
-            throw UserAlreadyExists()
+            throw UserAlreadyExists(user.email)
         }
         else if (isValidateUser(user)) {
                 userRepository.save(user)
