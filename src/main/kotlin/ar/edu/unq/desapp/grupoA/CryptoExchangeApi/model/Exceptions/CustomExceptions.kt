@@ -2,7 +2,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions
 
 class UserBodyIncorrectException() : Exception("User body field are incorrect")
 
-class UserAlreadyExists() : Exception("Usuario existente")
+class UserAlreadyExists(email: String) : Exception("Error al ingresar el usuario "+ email+" credenciales existentes")
 
 class UserDosentExists() : Exception("Usuario no encontrado")
 

@@ -19,7 +19,7 @@ class UserCreationDTO(
             surname = this.surname,
             email = this.email,
             address = this.address,
-            userpassword = this.password,
+            password = this.password,
             cvu = this.cvu,
             walletAddress = this.walletAddress
         )
@@ -32,7 +32,7 @@ class UserCreationDTO(
                 user.surname,
                 user.email,
                 user.address,
-                user.userpassword,
+                user.password,
                 user.cvu,
                 user.walletAddress
             )

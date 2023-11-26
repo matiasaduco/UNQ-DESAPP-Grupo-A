@@ -105,7 +105,7 @@ class UserRestControllerTest {
             .contentType(MediaType.APPLICATION_JSON)
             .content(jacksonObjectMapper().writeValueAsString(body)))
             .andExpect(status().isBadRequest)
-            .andExpect(content().string(CoreMatchers.containsString("Error al ingresar el usuario Lucas Alvarez, credenciales existentes")))
+            .andExpect(content().string(CoreMatchers.containsString("Error al ingresar el usuario alvarez@gmail.com credenciales existentes")))
     }
 
     @Test

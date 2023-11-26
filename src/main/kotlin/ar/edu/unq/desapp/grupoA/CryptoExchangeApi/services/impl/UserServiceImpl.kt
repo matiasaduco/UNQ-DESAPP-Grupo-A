@@ -37,7 +37,7 @@ class UserServiceImpl : UserService {
     override fun signup(user: User): User {
         userRepository.findFirstByEmail(user.email)
         if ( !userRepository.findFirstByEmail(user.email).isEmpty ){
-            throw UserAlreadyExists()
+            throw UserAlreadyExists(user.email)
         }
         else if (isValidateUser(user)) {
                 userRepository.save(user)
@@ -52,7 +52,7 @@ class UserServiceImpl : UserService {
                 hasAValidName(user.surname) &&
                 hasAValidEmail(user.email) &&
                 hasAValidAddress(user.address) &&
-                hasAValidPassword(user.userpassword) &&
+                hasAValidPassword(user.password) &&
                 hasAValidCVU(user.cvu) &&
                 hasAValidWalletAddress(user.walletAddress)
     }

@@ -44,7 +44,7 @@ class UserTest {
         val password : String = "eq4LR<5jv5jN"
         val user = UserBuilder().withPassword(password).build()
 
-        Assertions.assertEquals(user.userpassword, password)
+        Assertions.assertEquals(user.password, password)
     }
 
     @Test

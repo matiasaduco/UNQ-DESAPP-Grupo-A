@@ -78,7 +78,7 @@ class CryptoServiceImpl : CryptoService {
     }
 
     override fun getCryptoDayPrice(symbol: String): List<CryptoDTO> {
-        val cryptos = cryptoRepository.findBySymbol(symbol).ifEmpty { throw CryptoDoesntExistException() }
+        val cryptos = cryptoRepository.findBySymbolOrderByPricingHourAsc(symbol).ifEmpty { throw CryptoDoesntExistException() }
         val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
         cryptos.forEach{
             cryptosDTO.add(CryptoDTO.fromModel(it))
