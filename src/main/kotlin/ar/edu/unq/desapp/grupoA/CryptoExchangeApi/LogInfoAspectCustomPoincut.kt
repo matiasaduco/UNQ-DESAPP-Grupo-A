@@ -15,36 +15,37 @@ import org.springframework.stereotype.Component
 @Order(0)
 class LogInfoAspectCustomPoincut {
 
-    var logger : Logger = LoggerFactory.getLogger(LogInfoAspectCustomPoincut::class.java)
+    var logger: Logger = LoggerFactory.getLogger(LogInfoAspectCustomPoincut::class.java)
 
     @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller..*(..)) && ! execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.exceptionHandler..*(..))")
-    fun methodsStarterServicePointcut(){}
+    fun methodsStarterServicePointcut() {
+    }
 
     @Pointcut("execution(* ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.exceptionHandler..*(..))")
-    fun errorExceptionPointcut(){}
+    fun errorExceptionPointcut() {
+    }
 
 
     @Around("methodsStarterServicePointcut()")
     fun logExecutionTimeAnnotation(joinPoint: ProceedingJoinPoint): Any? {
 
-        var start : Long = System.currentTimeMillis()
+        val start: Long = System.currentTimeMillis()
 
+        val methodSig: MethodSignature = joinPoint.signature as MethodSignature
+        val params = methodSig.parameterNames
 
-        var methodSig : MethodSignature = joinPoint.signature as MethodSignature
-        var params = methodSig.parameterNames
-
-        var arguments = joinPoint.args
+        val arguments = joinPoint.args
         var paramsAndValues = "/////// Parameters: "
 
-        for (i in params.indices){
+        for (i in params.indices) {
             paramsAndValues += params.get(i) + " = " + arguments.get(i) + " "
         }
-        logger.info("/////// Timestamp: "+ start + " /////");
+        logger.info("/////// Timestamp: " + start + " /////");
         logger.info("/////// Inside " + joinPoint.signature.name + "() method")
         logger.info(paramsAndValues)
 
-        var proceed : Any = joinPoint.proceed()
-        var executionTime = System.currentTimeMillis() - start
+        val proceed: Any = joinPoint.proceed()
+        val executionTime = System.currentTimeMillis() - start
 
         logger.info("/////// LogExecutionTimeAspectAnnotation - " + joinPoint.signature + " executed in " + executionTime + "ms ")
         return proceed
@@ -52,10 +53,9 @@ class LogInfoAspectCustomPoincut {
 
     @Around("errorExceptionPointcut()")
     fun logExecutionErrorInfo(joinPoint: ProceedingJoinPoint): Any? {
-        var argument = joinPoint.args
-        logger.error("Unexpected error", argument.get(0))
+        val argument = joinPoint.args
+        logger.error("Unexpected error", argument[0])
 
-        var proceed: Any = joinPoint.proceed()
-        return proceed
+        return joinPoint.proceed()
     }
 }
