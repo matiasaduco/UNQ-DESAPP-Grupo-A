@@ -11,8 +11,11 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/intention")
-class IntentionController(private val intentionService: IntentionService, private val transactionService: TransactionService) {
-    @Operation(summary ="Publicar una intecion de compra/venta de cryptos")
+class IntentionController(
+    private val intentionService: IntentionService,
+    private val transactionService: TransactionService
+) {
+    @Operation(summary = "Publicar una intecion de compra/venta de cryptos")
     @PostMapping
     fun createIntention(
         @RequestBody intentionDTO: IntentionCreationDTO,
@@ -26,6 +29,7 @@ class IntentionController(private val intentionService: IntentionService, privat
 
         return ResponseEntity.status(HttpStatus.OK).body(intention)
     }
+
     @Operation(summary = "Obtener todas las intenciones creadas por los usuarios")
     @GetMapping
     fun getAllIntentions(): ResponseEntity<Any> {
@@ -35,10 +39,8 @@ class IntentionController(private val intentionService: IntentionService, privat
 
     @Operation(summary = "Postear una transacción sobre la intencion de id dada")
     @PostMapping("/{intentionId}/transaction")
-    fun postTransaction(@PathVariable intentionId: Int) : ResponseEntity<Any>{
-
-       val transactionDTO = transactionService.createTransaction(intentionId)
-       return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-   }
-
+    fun postTransaction(@PathVariable intentionId: Int): ResponseEntity<Any> {
+        val transactionDTO = transactionService.createTransaction(intentionId)
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
+    }
 }
