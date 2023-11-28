@@ -11,6 +11,7 @@ interface UserRepository : CrudRepository<User, Int> {
 
     fun findFirstByEmail(email :String): Optional<User>
 
+    fun findByEmail(email: String): User?
 
 
 }
