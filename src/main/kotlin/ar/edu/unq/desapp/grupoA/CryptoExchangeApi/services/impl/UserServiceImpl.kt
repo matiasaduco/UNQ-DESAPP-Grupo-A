@@ -64,10 +64,6 @@ class UserServiceImpl : UserService {
                 hasAValidWalletAddress(user.walletAddress)
     }
 
-    override fun login(): String {
-        TODO("Not yet implemented")
-    }
-
     override fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate: LocalDateTime): UserReport {
         val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId, firstDate, lastDate)
         var totalUSD = 0f
@@ -92,7 +88,7 @@ class UserServiceImpl : UserService {
 
     override fun getUsers(): List<UserDTO> {
         val users = userRepository.findAll()
-        var usersDTO: MutableList<UserDTO> = mutableListOf()
+        val usersDTO: MutableList<UserDTO> = mutableListOf()
 
         users.forEach {
             usersDTO.add(UserDTO.fromModel(it))

@@ -39,44 +39,44 @@ class IntentionServiceImpl : IntentionService {
         operation: IntentionType,
     ): IntentionDTO {
         return try {
-            var email = tokenService.getEmail()
+            val email = tokenService.getEmail()
 
-            var number = 10
             val crypto = cryptoRepository.findById(CryptoId(cryptoName, LocalDateTime.now().hour))
                 .orElseThrow { throw CryptoDoesntExistException() }
 
-            if (! isPriceInside5Percent(intentionCryptoPrice, crypto)){
+            if (!isPriceInside5Percent(intentionCryptoPrice, crypto)) {
                 throw PriceOutOfRangeException("Precio de intención fuera de rango")
             }
 
-            val user = userRepository.findFirstByEmail(email!!)
+            val user = userRepository.findFirstByEmail(email)
                 .orElseThrow { throw UserDosentExists() }
 
             val intention = Intention(crypto, criptoNominalQuantity, intentionCryptoPrice, operation, user)
             intentionRepository.save(intention)
-            val dolarPrice : DolarPrice = dolarProxyService.lastPrice
-            val priceInArs : Double = (crypto.price * criptoNominalQuantity) * dolarPrice.v
+            val dolarPrice: DolarPrice = dolarProxyService.lastPrice
+            val priceInArs: Double = (crypto.price * criptoNominalQuantity) * dolarPrice.v
 
-             IntentionDTO.fromModel(intention, priceInArs)
-       } catch (e: Exception) {
-           throw IntentionCannotBeCreatedException(operation.toString())
-       }
+            IntentionDTO.fromModel(intention, priceInArs)
+        } catch (e: Exception) {
+            throw IntentionCannotBeCreatedException(operation.toString())
+        }
     }
 
     override fun getAllIntentions(): List<IntentionDTO> {
 
-        val dolarPrice : DolarPrice = dolarProxyService.lastPrice
+        val dolarPrice: DolarPrice = dolarProxyService.lastPrice
         val intentions: List<Intention> = intentionRepository.findAllNotFinished()
-        val intentionsDTO : List<IntentionDTO> =
-            intentions.map { val priceInArs : Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
-            IntentionDTO.fromModel(it, priceInArs)
+        val intentionsDTO: List<IntentionDTO> =
+            intentions.map {
+                val priceInArs: Double = it.crypto.price * it.cryptoNominalQuantity * dolarPrice.v
+                IntentionDTO.fromModel(it, priceInArs)
             }
         return intentionsDTO
     }
 
 
-    fun isPriceInside5Percent(intentionCryptoPrice: Float, crypto: Crypto): Boolean{
-        val fivePercentage : Float = 5 * crypto.price / 100
+    fun isPriceInside5Percent(intentionCryptoPrice: Float, crypto: Crypto): Boolean {
+        val fivePercentage: Float = 5 * crypto.price / 100
         return intentionCryptoPrice >= crypto.price - fivePercentage && intentionCryptoPrice <= crypto.price + fivePercentage
     }
 }

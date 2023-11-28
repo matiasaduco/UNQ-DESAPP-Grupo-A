@@ -12,7 +12,6 @@ import java.util.Date
 @Service
 class TokenService(
 ) {
-
     @Autowired
     lateinit var request: HttpServletRequest
 
@@ -60,8 +59,8 @@ class TokenService(
             .payload
     }
 
-    fun getEmail(): String{
-        var token = request.getHeader("Authorization").substring(7)
+    fun getEmail(): String {
+        val token = request.getHeader("Authorization").substring(7)
 
         return extractEmail(token)!!
     }

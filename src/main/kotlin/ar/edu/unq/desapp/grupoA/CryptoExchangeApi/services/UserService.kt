@@ -7,7 +7,6 @@ import java.time.LocalDateTime
 
 interface UserService {
     fun signup(user: User): User
-    fun login(): String
-    fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate : LocalDateTime): UserReport
-     fun getUsers(): List<UserDTO>
+    fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate: LocalDateTime): UserReport
+    fun getUsers(): List<UserDTO>
 }
