@@ -11,7 +11,9 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionActionDTO
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionDTO
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -30,11 +32,14 @@ class TransactionServiceImpl : TransactionService {
     @Autowired
     lateinit var dolarProxyService: DolarProxyService
 
-    override fun createTransaction(intentionID: Int, transactionActionDTO: TransactionActionDTO): TransactionDTO {
+    @Autowired
+    lateinit var tokenService: TokenService
+
+    override fun createTransaction(intentionID: Int): TransactionDTO {
         val intention = intentionRepository.findById(intentionID)
             .orElseThrow { IntentionCannotBeFoundException(intentionID) }
 
-        val user = userRepository.findFirstByEmail(transactionActionDTO.email)
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
             .orElseThrow { UserDosentExists() }
 
         if (intention.user.id == user.id) {
@@ -65,14 +70,14 @@ class TransactionServiceImpl : TransactionService {
         return transactionDTO
     }
 
-    override fun confirmTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+    override fun confirmTransaction(transactionID: Int): TransactionDTO {
         val transaction = transactionRepository.findById(transactionID)
             .orElseThrow { TransactionCannotBeFound(transactionID) }
 
-        val user = userRepository.findFirstByEmail(transactionActionDTO.email)
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
             .orElseThrow { loginErrorException() }
 
-        if (user.password != transactionActionDTO.password || user.id != transaction.intention.user.id) {
+        if (user.id != transaction.intention.user.id) {
             throw loginErrorException()
         }
 
@@ -124,17 +129,19 @@ class TransactionServiceImpl : TransactionService {
         userRepository.save(intentionUser)
     }
 
-    override fun cancelTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+    override fun cancelTransaction(transactionID: Int): TransactionDTO {
         val transaction = transactionRepository.findById(transactionID)
             .orElseThrow { TransactionCannotBeFound(transactionID) }
 
         val userInterested = transaction.userInterested
         val intentionUser = transaction.intention.user
 
-        if (userInterested.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        val user = userRepository.findFirstByEmail(tokenService.getEmail()).orElseThrow{UserDosentExists()}
+
+        if (userInterested.email == user.email && userInterested.password == user.password) {
             userInterested.cancelTransaction()
             userRepository.save(userInterested)
-        } else if (intentionUser.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        } else if (intentionUser.email == user.email && userInterested.password == user.password) {
             intentionUser.cancelTransaction()
             userRepository.save(intentionUser)
         } else {
@@ -159,11 +166,12 @@ class TransactionServiceImpl : TransactionService {
         )
     }
 
-    override fun advanceOnTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+    override fun advanceOnTransaction(transactionID: Int): TransactionDTO {
+
         val transaction = transactionRepository.findById(transactionID)
             .orElseThrow { TransactionCannotBeFound(transactionID) }
 
-        val user = userRepository.findFirstByEmail(transactionActionDTO.email)
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
             .orElseThrow { loginErrorException() }
 
         if (user.password != transaction.userInterested.password) {

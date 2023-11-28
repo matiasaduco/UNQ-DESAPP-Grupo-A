@@ -8,11 +8,11 @@ import org.springframework.stereotype.Service
 @Service
 interface TransactionService {
 
-    fun createTransaction(intentionID : Int, transactionActionDTO: TransactionActionDTO): TransactionDTO
+    fun createTransaction(intentionID : Int): TransactionDTO
 
-    fun confirmTransaction(transactionActionDTO: TransactionActionDTO, transactionID : Int) : TransactionDTO
+    fun confirmTransaction(transactionID : Int) : TransactionDTO
 
-    fun cancelTransaction(transactionActionDTO: TransactionActionDTO, transactionID : Int): TransactionDTO
+    fun cancelTransaction(transactionID : Int): TransactionDTO
 
-    fun advanceOnTransaction(transactionActionDTO: TransactionActionDTO, transactionID : Int): TransactionDTO
+    fun advanceOnTransaction(transactionID : Int): TransactionDTO
 }

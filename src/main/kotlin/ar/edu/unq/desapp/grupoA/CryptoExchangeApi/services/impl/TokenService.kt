@@ -3,6 +3,8 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.security.Keys
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.Date
@@ -10,6 +12,9 @@ import java.util.Date
 @Service
 class TokenService(
 ) {
+
+    @Autowired
+    lateinit var request: HttpServletRequest
 
     private val secretKey = Keys.hmacShaKeyFor(
         "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437".toByteArray()
@@ -53,5 +58,11 @@ class TokenService(
         return parser
             .parseSignedClaims(token)
             .payload
+    }
+
+    fun getEmail(): String{
+        var token = request.getHeader("Authorization").substring(7)
+
+        return extractEmail(token)!!
     }
 }
