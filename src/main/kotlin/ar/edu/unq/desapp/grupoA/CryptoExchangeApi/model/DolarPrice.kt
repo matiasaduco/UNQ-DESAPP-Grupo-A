@@ -10,15 +10,13 @@ import org.springframework.web.client.RestTemplate
 import java.time.LocalDate
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-class DolarPrice (
+class DolarPrice(
     var d: LocalDate,
-    val v: Double) {
-
+    val v: Double
+) {
 
     override fun toString(): String {
         return "date: " + this.d + ", price: " + this.v
     }
-
-
 
 }

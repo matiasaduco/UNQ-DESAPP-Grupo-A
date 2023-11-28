@@ -16,24 +16,24 @@ class Transaction(
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    var id : Int? = null
+    var id: Int? = null
     var createdAt: LocalDateTime = LocalDateTime.now()
     var transactionState: TransactionState = TransactionState.WAITING
-    val address : String
+    val address: String
         get() {
-            if (intention.operation == IntentionType.BUY){
-            return intention.user.walletAddress.toString()
-            }else{
-                return intention.user.cvu.toString()
+            return if (intention.operation == IntentionType.BUY) {
+                intention.user.walletAddress.toString()
+            } else {
+                intention.user.cvu.toString()
             }
         }
 
 
-    fun getAction():String{
-        if (intention.operation == IntentionType.BUY){
-            return ""
-        }else{
-            return ""
+    fun getAction(): String {
+        return if (intention.operation == IntentionType.BUY) {
+            ""
+        } else {
+            ""
         }
     }
 }

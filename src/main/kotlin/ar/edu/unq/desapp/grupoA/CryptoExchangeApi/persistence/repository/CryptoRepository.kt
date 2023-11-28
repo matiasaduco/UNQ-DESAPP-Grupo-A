@@ -8,5 +8,5 @@ interface CryptoRepository : CrudRepository<Crypto, CryptoId> {
 
     fun findByPricingHour(pricingHour: Int): List<Crypto>
 
-    fun findBySymbolOrderByPricingHourAsc(symbol:String) :List<Crypto>
+    fun findBySymbolOrderByPricingHourAsc(symbol: String): List<Crypto>
 }

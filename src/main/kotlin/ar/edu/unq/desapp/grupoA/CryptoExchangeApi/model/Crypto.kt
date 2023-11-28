@@ -8,19 +8,19 @@ import java.io.Serializable
 import java.time.LocalDateTime
 
 
-
 @Embeddable
-class CryptoId(val symbol: String, val pricingHour : Int): Serializable
-
+class CryptoId(val symbol: String, val pricingHour: Int) : Serializable
 
 @Entity
 @IdClass(CryptoId::class)
 class Crypto(
     @Id
     val symbol: String,
-    var price: Float) {
+    var price: Float
+) {
 
     var pricingTime: LocalDateTime = LocalDateTime.now()
+
     @Id
     var pricingHour: Int = this.pricingTime.hour
 }
