@@ -8,7 +8,6 @@ class IntentionCreationDTO(
         val cryptoNominalQuantity: Double,
         val cryptoIntentionPrice: Float,
         val operation: IntentionType,
-        val userId: Int,
 ) {
     companion object {
         fun fromModel(intention: Intention): IntentionCreationDTO {
@@ -17,7 +16,6 @@ class IntentionCreationDTO(
                 intention.cryptoNominalQuantity,
                 intention.intentionCryptoPrice,
                 intention.operation,
-                intention.user.id!!
             )
         }
     }

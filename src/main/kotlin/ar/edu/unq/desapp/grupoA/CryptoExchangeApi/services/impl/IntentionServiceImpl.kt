@@ -8,6 +8,8 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRep
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.IntentionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.IntentionDTO
+import jakarta.servlet.ServletContext
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
@@ -27,14 +29,19 @@ class IntentionServiceImpl : IntentionService {
     @Autowired
     lateinit var dolarProxyService: DolarProxyService
 
+    @Autowired
+    lateinit var tokenService: TokenService
+
     override fun createIntention(
         cryptoName: String,
         criptoNominalQuantity: Double,
         intentionCryptoPrice: Float,
         operation: IntentionType,
-        userId: Int
     ): IntentionDTO {
         return try {
+            var email = tokenService.getEmail()
+
+            var number = 10
             val crypto = cryptoRepository.findById(CryptoId(cryptoName, LocalDateTime.now().hour))
                 .orElseThrow { throw CryptoDoesntExistException() }
 
@@ -42,7 +49,7 @@ class IntentionServiceImpl : IntentionService {
                 throw PriceOutOfRangeException("Precio de intención fuera de rango")
             }
 
-            val user = userRepository.findById(userId)
+            val user = userRepository.findFirstByEmail(email!!)
                 .orElseThrow { throw UserDosentExists() }
 
             val intention = Intention(crypto, criptoNominalQuantity, intentionCryptoPrice, operation, user)
@@ -50,11 +57,10 @@ class IntentionServiceImpl : IntentionService {
             val dolarPrice : DolarPrice = dolarProxyService.lastPrice
             val priceInArs : Double = (crypto.price * criptoNominalQuantity) * dolarPrice.v
 
-            return IntentionDTO.fromModel(intention, priceInArs)
-
-        } catch (e: Exception) {
-            throw IntentionCannotBeCreatedException(operation.toString())
-        }
+             IntentionDTO.fromModel(intention, priceInArs)
+       } catch (e: Exception) {
+           throw IntentionCannotBeCreatedException(operation.toString())
+       }
     }
 
     override fun getAllIntentions(): List<IntentionDTO> {

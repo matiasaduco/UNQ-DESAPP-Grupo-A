@@ -12,7 +12,6 @@ interface IntentionService {
         criptoNominalQuantity: Double,
         intentionCryptoPrice: Float,
         operation: IntentionType,
-        userId: Int
     ): IntentionDTO
 
     fun getAllIntentions(): List<IntentionDTO>

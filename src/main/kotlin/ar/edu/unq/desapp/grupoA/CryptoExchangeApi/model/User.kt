@@ -25,6 +25,7 @@ class User(
     var id: Int? = null
     var operations: Int = 0
     var reputationPoints: Int = 0
+    var role: Role = Role.USER
 
     fun getReputation(): String {
         if (this.operations == 0){

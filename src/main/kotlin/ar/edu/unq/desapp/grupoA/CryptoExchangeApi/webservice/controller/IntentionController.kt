@@ -22,7 +22,6 @@ class IntentionController(private val intentionService: IntentionService, privat
             intentionDTO.cryptoNominalQuantity,
             intentionDTO.cryptoIntentionPrice,
             intentionDTO.operation,
-            intentionDTO.userId
         )
 
         return ResponseEntity.status(HttpStatus.OK).body(intention)
@@ -36,9 +35,9 @@ class IntentionController(private val intentionService: IntentionService, privat
 
     @Operation(summary = "Postear una transacción sobre la intencion de id dada")
     @PostMapping("/{intentionId}/transaction")
-    fun postTransaction(@PathVariable intentionId: Int, @RequestBody transactionActionDTO: TransactionActionDTO) : ResponseEntity<Any>{
+    fun postTransaction(@PathVariable intentionId: Int) : ResponseEntity<Any>{
 
-       val transactionDTO = transactionService.createTransaction(intentionId,transactionActionDTO)
+       val transactionDTO = transactionService.createTransaction(intentionId)
        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
    }
 
