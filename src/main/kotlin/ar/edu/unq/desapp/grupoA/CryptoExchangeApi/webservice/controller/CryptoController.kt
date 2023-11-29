@@ -15,17 +15,17 @@ class CryptoController(private val cryptoService: CryptoService) {
 
     @Operation(summary = "Obtener el precio de la crypto dada")
     @GetMapping("/{cryptoSymbol}")
-    fun getCryptoPrice(@PathVariable cryptoSymbol: String ): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
-    }
+    fun getCryptoPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoPrice(cryptoSymbol))
+
     @Operation(summary = "Obtener el precio de todas las cryptos")
     @GetMapping("/prices")
-    fun getCryptosPrices(): ResponseEntity<Any> {
-        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptosPrice())
-    }
+    fun getCryptosPrices(): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptosPrice())
+
     @Operation(summary = "Obtener el precio de las ultimas 24hs de la crypto dada")
     @GetMapping("/{cryptoSymbol}/day")
-    fun getCryptoDailyPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any>{
-        return ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoDayPrice(cryptoSymbol))
-    }
+    fun getCryptoDailyPrice(@PathVariable cryptoSymbol: String): ResponseEntity<Any> =
+        ResponseEntity.status(HttpStatus.OK).body(cryptoService.getCryptoDayPrice(cryptoSymbol))
+
 }

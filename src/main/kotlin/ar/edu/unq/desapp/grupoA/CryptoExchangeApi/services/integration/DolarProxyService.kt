@@ -11,6 +11,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Service
 import org.springframework.web.client.RestTemplate
+
 @Configuration
 @EnableScheduling
 @Service
@@ -18,27 +19,31 @@ class DolarProxyService {
     private var restTemplate: RestTemplate = RestTemplate()
     private var bcraApiUrl: String = "https://api.estadisticasbcra.com/usd"
 
-    lateinit var lastPrice : DolarPrice
+    lateinit var lastPrice: DolarPrice
 
-    @Scheduled(fixedDelay = 600000 )
+    @Scheduled(fixedDelay = 600000)
     @PostConstruct
-    fun getLastDolarPrice(){
-        var headers : HttpHeaders = HttpHeaders()
-        headers.set("Authorization", "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk3MDIzNjEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWNhc0Bob3RtYWlsLmNvbSJ9.fZ04yaP3xE7WkWr3lbmovn0HxqLROVE20tV5csuZUdpk7V1ikqNXpM_4fW7v5lBHjaYi7SMFsSfe_jREl3r44w")
+    fun getLastDolarPrice() {
+        val headers = HttpHeaders()
+        headers.set(
+            "Authorization",
+            "BEARER eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3Mjk3MDIzNjEsInR5cGUiOiJleHRlcm5hbCIsInVzZXIiOiJsdWNhc0Bob3RtYWlsLmNvbSJ9.fZ04yaP3xE7WkWr3lbmovn0HxqLROVE20tV5csuZUdpk7V1ikqNXpM_4fW7v5lBHjaYi7SMFsSfe_jREl3r44w"
+        )
 
-        var entity : HttpEntity<Void> = HttpEntity<Void>(headers)
+        val entity: HttpEntity<Void> = HttpEntity<Void>(headers)
 
-        var response : ResponseEntity<Array<DolarPrice>> = restTemplate.exchange(bcraApiUrl, HttpMethod.GET, entity, Array<DolarPrice>::class.java)
-        var prices : Array<DolarPrice> = response.body!!
+        val response: ResponseEntity<Array<DolarPrice>> =
+            restTemplate.exchange(bcraApiUrl, HttpMethod.GET, entity, Array<DolarPrice>::class.java)
+        val prices: Array<DolarPrice> = response.body!!
 
         this.lastPrice = prices.last()
     }
 
-    fun getLastPrice(): Double{
+    fun getLastPrice(): Double {
         return lastPrice.v
     }
 
-    fun getPriceInArs(price: Double): Double{
+    fun getPriceInArs(price: Double): Double {
         return price * getLastPrice()
     }
 }

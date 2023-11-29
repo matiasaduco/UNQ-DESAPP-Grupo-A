@@ -7,8 +7,8 @@ class UserDTO(
     val name: String,
     val numberOfOperations: Int,
     val reputation: String
-){
-    companion object{
+) {
+    companion object {
         fun fromModel(user: User): UserDTO {
             return UserDTO(
                 user.getFullname(),

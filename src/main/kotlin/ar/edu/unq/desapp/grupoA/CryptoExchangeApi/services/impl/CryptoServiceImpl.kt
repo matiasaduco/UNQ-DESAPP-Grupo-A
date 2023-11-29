@@ -1,6 +1,5 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.CryptoId
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.CryptoDoesntExistException
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.CryptoRepository
@@ -29,27 +28,27 @@ class CryptoServiceImpl : CryptoService {
     lateinit var cryptoRepository: CryptoRepository
 
     val cryptoSymbols: String = "[\"ALICEUSDT\"," +
-            "\"MATICUSDT\","+
-            "\"AXSUSDT\","+
-            "\"AAVEUSDT\","+
-            "\"ATOMUSDT\","+
-            "\"NEOUSDT\","+
-            "\"DOTUSDT\","+
-            "\"ETHUSDT\","+
-            "\"CAKEUSDT\","+
-            "\"BTCUSDT\","+
-            "\"BNBUSDT\","+
-            "\"ADAUSDT\","+
-            "\"TRXUSDT\","+
-            "\"AUDIOUSDT\""+
+            "\"MATICUSDT\"," +
+            "\"AXSUSDT\"," +
+            "\"AAVEUSDT\"," +
+            "\"ATOMUSDT\"," +
+            "\"NEOUSDT\"," +
+            "\"DOTUSDT\"," +
+            "\"ETHUSDT\"," +
+            "\"CAKEUSDT\"," +
+            "\"BTCUSDT\"," +
+            "\"BNBUSDT\"," +
+            "\"ADAUSDT\"," +
+            "\"TRXUSDT\"," +
+            "\"AUDIOUSDT\"" +
             "]"
 
 
     @Cacheable("Cryptos")
     override fun getCryptosPrice(): List<CryptoDTO> {
         val cryptos = cryptoRepository.findByPricingHour(LocalDateTime.now().hour)
-        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
-        cryptos.forEach{
+        val cryptosDTO: MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach {
             cryptosDTO.add(CryptoDTO.fromModel(it))
         }
 
@@ -58,16 +57,16 @@ class CryptoServiceImpl : CryptoService {
 
     override fun getCryptoPrice(symbol: String): CryptoDTO {
         val crypto = cryptoRepository.findById(CryptoId(symbol, LocalDateTime.now().hour))
-            .orElseThrow{throw CryptoDoesntExistException() }
+            .orElseThrow { throw CryptoDoesntExistException() }
         return CryptoDTO.fromModel(crypto)
     }
 
     @PostConstruct
-    @Scheduled(fixedDelay = 600000 )
+    @Scheduled(fixedDelay = 600000)
     @CachePut("Cryptos")
-    fun getCryptosPriceFromBinance(): List<CryptoDTO>{
+    fun getCryptosPriceFromBinance(): List<CryptoDTO> {
         val cryptos = binaceProxyService.getAllCryptoCurrencyValues(cryptoSymbols)
-        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
+        val cryptosDTO: MutableList<CryptoDTO> = mutableListOf()
 
         cryptos.forEach {
             cryptoRepository.save(it)
@@ -78,13 +77,13 @@ class CryptoServiceImpl : CryptoService {
     }
 
     override fun getCryptoDayPrice(symbol: String): List<CryptoDTO> {
-        val cryptos = cryptoRepository.findBySymbolOrderByPricingHourAsc(symbol).ifEmpty { throw CryptoDoesntExistException() }
-        val cryptosDTO : MutableList<CryptoDTO> = mutableListOf()
-        cryptos.forEach{
+        val cryptos =
+            cryptoRepository.findBySymbolOrderByPricingHourAsc(symbol).ifEmpty { throw CryptoDoesntExistException() }
+        val cryptosDTO: MutableList<CryptoDTO> = mutableListOf()
+        cryptos.forEach {
             cryptosDTO.add(CryptoDTO.fromModel(it))
         }
         return cryptosDTO
     }
-    
 
 }

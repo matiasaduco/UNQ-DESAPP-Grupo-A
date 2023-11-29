@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/transaction")
 class TransactionController(private val transactionService: TransactionService) {
 
-
     @Operation(summary = "Avanzar en la transacción de parte del usuario interesado")
     @PostMapping("/{transactionID}/advance")
     fun advanceOnTransaction(
@@ -25,14 +24,13 @@ class TransactionController(private val transactionService: TransactionService) 
         return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
     }
 
-
     @Operation(summary = "El usuario que publico la intención confirma la transacción")
     @PostMapping("/{transactionID}/confirm")
     fun confirmTransaction(
         @PathVariable transactionID: Int
     ): ResponseEntity<Any> {
         val transactionDTO = transactionService.confirmTransaction(transactionID)
-       return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
     }
 
 

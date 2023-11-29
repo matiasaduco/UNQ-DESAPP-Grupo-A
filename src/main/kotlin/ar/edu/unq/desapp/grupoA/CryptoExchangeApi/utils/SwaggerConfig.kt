@@ -12,19 +12,19 @@ import org.springframework.context.annotation.Configuration
 class SwaggerConfig {
 
     @Bean
-    fun myOpenAPI(): OpenAPI{
-        var devServer : Server = Server()
+    fun myOpenAPI(): OpenAPI {
+        val devServer = Server()
         devServer.url = "crypto.exchange.dev-url"
         devServer.description = "Server URL in Development environment"
 
-        var contact: Contact = Contact()
+        val contact = Contact()
         contact.email = "crypto.exchange@crypto.exchange.com"
-        contact.name= "crypto.exchange"
-        contact.url= "https://www.crypto.exchange.com"
+        contact.name = "crypto.exchange"
+        contact.url = "https://www.crypto.exchange.com"
 
-        var mitLicense : License = License().name("MIT License").url("https://cryptoExcange.com/licenses/mit/")
+        val mitLicense: License = License().name("MIT License").url("https://cryptoExcange.com/licenses/mit/")
 
-        var info : Info = Info()
+        val info: Info = Info()
             .title("Crypto Exchange API")
             .version("1.0")
             .contact(contact)

@@ -5,4 +5,4 @@ class Active(
     val criptoNominalQuantity: Double,
     val usdPrice: Float,
     val argPrice: Float,
-) {}
+)

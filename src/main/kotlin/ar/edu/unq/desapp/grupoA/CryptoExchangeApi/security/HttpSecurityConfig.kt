@@ -21,11 +21,11 @@ class HttpSecurityConfig {
     private lateinit var authentiactionProvider: AuthenticationProvider
 
     @Bean
-    fun apiFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain{
+    fun apiFilterChain(http: HttpSecurity, jwtAuthenticationFilter: JwtAuthenticationFilter): SecurityFilterChain {
         http
             .csrf { it.disable() }
             .headers { it.frameOptions { it.disable() } }
-            .authorizeHttpRequests{
+            .authorizeHttpRequests {
                 it
                     .requestMatchers(AntPathRequestMatcher("/transaction/**"))
                     .authenticated()
@@ -35,7 +35,7 @@ class HttpSecurityConfig {
                     .authenticated()
                     .anyRequest().permitAll()
             }
-            .httpBasic{ }
+            .httpBasic { }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authentiactionProvider)
             .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
