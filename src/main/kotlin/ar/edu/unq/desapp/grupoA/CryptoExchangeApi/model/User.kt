@@ -17,9 +17,7 @@ class User(
     var email: String,
     var address: String,
     var password: String,
-    @Column(unique = true)
     var cvu: BigInteger,
-    @Column(unique = true)
     var walletAddress: Int,
 ) {
     @Id
@@ -27,12 +25,13 @@ class User(
     var id: Int? = null
     var operations: Int = 0
     var reputationPoints: Int = 0
+    var role: Role = Role.USER
 
     fun getReputation(): String {
-        if (this.operations == 0){
-            return "Sin operaciones"
-        }else{
-            return "" + this.reputationPoints / this.operations.toDouble()
+        return if (this.operations == 0) {
+            "Sin operaciones"
+        } else {
+            "" + this.reputationPoints / this.operations.toDouble()
         }
     }
 
@@ -50,7 +49,7 @@ class User(
         this.operations += 1
     }
 
-    fun getFullname(): String{
+    fun getFullname(): String {
         return this.name + " " + this.surname
     }
 }

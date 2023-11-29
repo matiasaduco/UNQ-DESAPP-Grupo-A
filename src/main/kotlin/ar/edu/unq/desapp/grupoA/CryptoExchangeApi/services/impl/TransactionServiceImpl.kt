@@ -1,6 +1,7 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.*
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Transaction
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
@@ -8,9 +9,11 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Transac
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionActionDTO
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionActionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionDTO
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -29,19 +32,22 @@ class TransactionServiceImpl : TransactionService {
     @Autowired
     lateinit var dolarProxyService: DolarProxyService
 
-    override fun createTransaction(intentionID: Int, userID: Int): TransactionDTO {
+    @Autowired
+    lateinit var tokenService: TokenService
+
+    override fun createTransaction(intentionID: Int): TransactionDTO {
         val intention = intentionRepository.findById(intentionID)
-            .orElseThrow { Exception("Error al recuperar la intención $intentionID") }
+            .orElseThrow { IntentionCannotBeFoundException(intentionID) }
 
-        val user = userRepository.findById(userID)
-            .orElseThrow { Exception("Error al recuperar usuario $userID") }
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
+            .orElseThrow { UserDosentExists() }
 
-        if (intention.user.id == userID) {
-            throw Exception("Usuario no puede crear transacción de su propia intención")
+        if (intention.user.id == user.id) {
+            throw TransactionCannotAdvance("Usuario no puede crear transacción de su propia intención")
         }
 
-        if (intention.isFinished){
-            throw Exception("Intención ha finalizado")
+        if (intention.isFinished) {
+            throw TransactionCannotAdvance("Intención ha finalizado")
         }
 
         val transaction = Transaction(intention, user)
@@ -64,19 +70,19 @@ class TransactionServiceImpl : TransactionService {
         return transactionDTO
     }
 
-    override fun confirmTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+    override fun confirmTransaction(transactionID: Int): TransactionDTO {
         val transaction = transactionRepository.findById(transactionID)
-            .orElseThrow { Exception("Transacción $transactionID no encontrada") }
+            .orElseThrow { TransactionCannotBeFound(transactionID) }
 
-        val user = userRepository.findFirstByEmail(transactionActionDTO.email)
-            .orElseThrow { Exception("Usuario o contraseña erroneos") }
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
+            .orElseThrow { loginErrorException() }
 
-        if (user.password != transactionActionDTO.password || user.id != transaction.intention.user.id) {
-            throw Exception("Usuario o contraseña erroneos")
+        if (user.id != transaction.intention.user.id) {
+            throw loginErrorException()
         }
 
         if (transaction.transactionState != TransactionState.TRANSFERED) {
-            throw Exception("Transacción no fue continuada")
+            throw TransactionCannotAdvance("Transacción no fue continuada")
         }
 
         if (transaction.intention.canBeConfirmed()) {
@@ -84,7 +90,7 @@ class TransactionServiceImpl : TransactionService {
         } else {
             transaction.transactionState = TransactionState.CANCELED
             transactionRepository.save(transaction)
-            throw Exception("Discrepancia en precio de la cripto")
+            throw PriceOutOfRangeException("Discrepancia en precio de la cripto")
         }
 
         val priceInArs =
@@ -123,21 +129,23 @@ class TransactionServiceImpl : TransactionService {
         userRepository.save(intentionUser)
     }
 
-    override fun cancelTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
+    override fun cancelTransaction(transactionID: Int): TransactionDTO {
         val transaction = transactionRepository.findById(transactionID)
-            .orElseThrow { Exception("Transacción $transactionID no encontrada") }
+            .orElseThrow { TransactionCannotBeFound(transactionID) }
 
         val userInterested = transaction.userInterested
         val intentionUser = transaction.intention.user
 
-        if (userInterested.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        val user = userRepository.findFirstByEmail(tokenService.getEmail()).orElseThrow { UserDosentExists() }
+
+        if (userInterested.email == user.email && userInterested.password == user.password) {
             userInterested.cancelTransaction()
             userRepository.save(userInterested)
-        } else if (intentionUser.email == transactionActionDTO.email && userInterested.password == transactionActionDTO.password) {
+        } else if (intentionUser.email == user.email && userInterested.password == user.password) {
             intentionUser.cancelTransaction()
             userRepository.save(intentionUser)
         } else {
-            throw Exception("Transaction incorrecta")
+            throw TransactionCannotAdvance("Error en transaccion")
         }
 
         transaction.transactionState = TransactionState.CANCELED
@@ -158,15 +166,16 @@ class TransactionServiceImpl : TransactionService {
         )
     }
 
-    override fun advanceOnTransaction(transactionActionDTO: TransactionActionDTO, transactionID: Int): TransactionDTO {
-        val transaction = transactionRepository.findById(transactionID)
-            .orElseThrow { Exception("Transacción $transactionID no encontrada") }
+    override fun advanceOnTransaction(transactionID: Int): TransactionDTO {
 
-        val user = userRepository.findFirstByEmail(transactionActionDTO.email)
-            .orElseThrow { Exception("Usuario o contraseña erroneos") }
+        val transaction = transactionRepository.findById(transactionID)
+            .orElseThrow { TransactionCannotBeFound(transactionID) }
+
+        val user = userRepository.findFirstByEmail(tokenService.getEmail())
+            .orElseThrow { loginErrorException() }
 
         if (user.password != transaction.userInterested.password) {
-            throw Exception("Usuario o contraseña erroneos")
+            throw loginErrorException()
         }
 
         transaction.transactionState = TransactionState.TRANSFERED

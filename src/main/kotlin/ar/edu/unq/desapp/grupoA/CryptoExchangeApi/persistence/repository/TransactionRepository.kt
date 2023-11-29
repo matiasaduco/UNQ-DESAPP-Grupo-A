@@ -12,8 +12,9 @@ import java.util.*
 @Repository
 interface TransactionRepository : CrudRepository<Transaction, Int> {
     @Query(value = "SELECT t FROM Transaction t WHERE (t.intention.user.id = :userId OR t.userInterested.id = :userId) AND (t.createdAt BETWEEN :firstDate AND :lastDate) AND t.transactionState = 3")
-    fun findAllFinishedTransactionsByOwner(userId: Int, firstDate: LocalDateTime, lastDate: LocalDateTime): List<Transaction>
-
-
-
+    fun findAllFinishedTransactionsByOwner(
+        userId: Int,
+        firstDate: LocalDateTime,
+        lastDate: LocalDateTime
+    ): List<Transaction>
 }

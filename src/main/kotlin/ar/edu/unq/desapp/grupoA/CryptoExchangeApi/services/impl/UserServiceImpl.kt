@@ -1,8 +1,8 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.impl
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Active
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserAlreadyExists
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.UserBodyIncorrectException
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.TransactionState
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.User
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.UserReport
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.IntentionRepository
@@ -10,12 +10,12 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.Transac
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.persistence.repository.UserRepository
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.UserDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.math.BigInteger
 import java.time.LocalDateTime
-import java.util.*
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -34,15 +34,18 @@ class UserServiceImpl : UserService {
     @Autowired
     private lateinit var dolarProxyService: DolarProxyService
 
+    @Autowired
+    private lateinit var encoder: PasswordEncoder
 
     override fun signup(user: User): User {
-        if (isValidateUser(user)) {
-            return try {
-                userRepository.save(user)
-                user
-            } catch (exception: Exception) {
-                throw Exception("Error al ingresar el usuario ${user.getFullname()}, credenciales existentes")
-            }
+        userRepository.findFirstByEmail(user.email)
+        if (!userRepository.findFirstByEmail(user.email).isEmpty) {
+            throw UserAlreadyExists(user.email)
+        } else if (isValidateUser(user)) {
+
+            user.password = encoder.encode(user.password)
+            userRepository.save(user)
+            return user
         } else {
             throw UserBodyIncorrectException()
         }
@@ -58,12 +61,9 @@ class UserServiceImpl : UserService {
                 hasAValidWalletAddress(user.walletAddress)
     }
 
-    override fun login(): String {
-        TODO("Not yet implemented")
-    }
 
-    override fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate : LocalDateTime): UserReport {
-        val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId, firstDate,lastDate)
+    override fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate: LocalDateTime): UserReport {
+        val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId, firstDate, lastDate)
         var totalUSD = 0f
         transactionsList.forEach { totalUSD += it.intention.intentionCryptoPrice }
 
@@ -86,10 +86,10 @@ class UserServiceImpl : UserService {
 
     override fun getUsers(): List<UserDTO> {
         val users = userRepository.findAll()
-        var usersDTO : MutableList<UserDTO> = mutableListOf()
+        var usersDTO: MutableList<UserDTO> = mutableListOf()
 
         users.forEach {
-            usersDTO.add( UserDTO.fromModel(it) )
+            usersDTO.add(UserDTO.fromModel(it))
         }
 
         return usersDTO

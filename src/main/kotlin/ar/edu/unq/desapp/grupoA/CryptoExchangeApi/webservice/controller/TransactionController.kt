@@ -1,7 +1,8 @@
 package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller
 
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.TransactionService
-import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.dto.TransactionActionDTO
+import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.TransactionActionDTO
+import io.swagger.v3.oas.annotations.Operation
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PathVariable
@@ -14,42 +15,32 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/transaction")
 class TransactionController(private val transactionService: TransactionService) {
 
+    @Operation(summary = "Avanzar en la transacción de parte del usuario interesado")
     @PostMapping("/{transactionID}/advance")
     fun advanceOnTransaction(
-        @RequestBody transactionActionDTO: TransactionActionDTO,
         @PathVariable transactionID: Int
     ): ResponseEntity<Any> {
-        return try {
-            val transactionDTO = transactionService.advanceOnTransaction(transactionActionDTO, transactionID)
-            ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+        val transactionDTO = transactionService.advanceOnTransaction(transactionID)
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
     }
 
+    @Operation(summary = "El usuario que publico la intención confirma la transacción")
     @PostMapping("/{transactionID}/confirm")
     fun confirmTransaction(
-        @RequestBody transactionActionDTO: TransactionActionDTO,
         @PathVariable transactionID: Int
     ): ResponseEntity<Any> {
-        return try {
-            val transactionDTO = transactionService.confirmTransaction(transactionActionDTO, transactionID)
-            ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+        val transactionDTO = transactionService.confirmTransaction(transactionID)
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
     }
 
+
+    @Operation(summary = "Cualquiera de las partes de la transacción la cancela")
     @PostMapping("/{transactionID}/cancel")
     fun cancelTransaction(
         @RequestBody transactionActionDTO: TransactionActionDTO,
         @PathVariable transactionID: Int
     ): ResponseEntity<Any> {
-        return try {
-            val transactionDTO = transactionService.cancelTransaction(transactionActionDTO, transactionID)
-            ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
-        } catch (e: Exception) {
-            ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.message)
-        }
+        val transactionDTO = transactionService.cancelTransaction(transactionID)
+        return ResponseEntity.status(HttpStatus.OK).body(transactionDTO)
     }
 }
