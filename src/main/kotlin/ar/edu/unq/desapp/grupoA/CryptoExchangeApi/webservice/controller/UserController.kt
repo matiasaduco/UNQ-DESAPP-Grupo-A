@@ -43,6 +43,7 @@ class UserController(private val userService: UserService, private val authentic
     }
 
     @PostMapping("/login")
+    @Operation(summary = "Loguear usuario")
     fun authenticate(@RequestBody authRequest: AuthRequest): ResponseEntity<Any>{
         return ResponseEntity.ok(authenticationService.authentication(authRequest))
     }
