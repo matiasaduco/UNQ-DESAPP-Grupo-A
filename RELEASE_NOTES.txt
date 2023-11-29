@@ -1,14 +1,15 @@
 ---------------------------------------------------------------------
-TAG Entrega 2 1.0
+TAG Entrega 3 1.0
 ---------------------------------------------------------------------
 NEW FEATURES:
-* User, Crypto, Intention and Transaction Service , Controller and Repository
-* H2-database
-* Dolar price
-* Test controller End to End
+* Architecture test
+* Spring security, JWT token
+* GlobalExceptionHandler
+* Logger
+* Cache
+* Crypto day pricing
 
 NOTES :
-* Spring Security has been disable.
 
 KNOWN ISSUES:
 
