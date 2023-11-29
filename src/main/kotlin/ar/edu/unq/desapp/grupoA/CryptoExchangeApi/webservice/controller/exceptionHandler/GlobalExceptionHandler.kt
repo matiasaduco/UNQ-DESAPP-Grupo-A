@@ -3,6 +3,7 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.webservice.controller.excepti
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Exceptions.*
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.web.HttpRequestMethodNotSupportedException
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
 
@@ -62,5 +63,10 @@ class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException::class)
     fun handleRuntimeException(exception: RuntimeException): ResponseEntity<Any>{
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(exception.message)
+    }
+
+    @ExceptionHandler(HttpRequestMethodNotSupportedException::class)
+    fun handleMethodNotSupportedException(exception:HttpRequestMethodNotSupportedException):ResponseEntity<Any>{
+        return ResponseEntity.status(HttpStatus.METHOD_NOT_ALLOWED).body(exception.message)
     }
 }

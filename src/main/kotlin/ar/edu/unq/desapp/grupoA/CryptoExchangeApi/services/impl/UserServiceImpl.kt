@@ -12,9 +12,6 @@ import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.UserService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.services.integration.DolarProxyService
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto.UserDTO
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.security.core.userdetails.UserDetails
-import org.springframework.security.core.userdetails.UserDetailsService
-import org.springframework.security.core.userdetails.UsernameNotFoundException
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Service
 import java.math.BigInteger
@@ -64,6 +61,7 @@ class UserServiceImpl : UserService {
                 hasAValidWalletAddress(user.walletAddress)
     }
 
+
     override fun getUserReport(userId: Int, firstDate: LocalDateTime, lastDate: LocalDateTime): UserReport {
         val transactionsList = transactionRepository.findAllFinishedTransactionsByOwner(userId, firstDate, lastDate)
         var totalUSD = 0f
@@ -88,7 +86,7 @@ class UserServiceImpl : UserService {
 
     override fun getUsers(): List<UserDTO> {
         val users = userRepository.findAll()
-        val usersDTO: MutableList<UserDTO> = mutableListOf()
+        var usersDTO: MutableList<UserDTO> = mutableListOf()
 
         users.forEach {
             usersDTO.add(UserDTO.fromModel(it))
@@ -127,5 +125,4 @@ class UserServiceImpl : UserService {
     fun hasAValidWalletAddress(walletAddress: Int): Boolean {
         return walletAddress.toString().length == 8
     }
-
 }
