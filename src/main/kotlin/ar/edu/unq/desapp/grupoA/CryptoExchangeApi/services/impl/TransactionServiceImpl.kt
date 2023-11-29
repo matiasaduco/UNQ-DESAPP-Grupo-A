@@ -46,7 +46,7 @@ class TransactionServiceImpl : TransactionService {
             throw TransactionCannotAdvance("Usuario no puede crear transacción de su propia intención")
         }
 
-        if (intention.isFinished){
+        if (intention.isFinished) {
             throw TransactionCannotAdvance("Intención ha finalizado")
         }
 
@@ -136,7 +136,7 @@ class TransactionServiceImpl : TransactionService {
         val userInterested = transaction.userInterested
         val intentionUser = transaction.intention.user
 
-        val user = userRepository.findFirstByEmail(tokenService.getEmail()).orElseThrow{UserDosentExists()}
+        val user = userRepository.findFirstByEmail(tokenService.getEmail()).orElseThrow { UserDosentExists() }
 
         if (userInterested.email == user.email && userInterested.password == user.password) {
             userInterested.cancelTransaction()

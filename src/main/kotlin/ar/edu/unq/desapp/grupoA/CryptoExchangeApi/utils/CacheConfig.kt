@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Configuration
 @Configuration
 @EnableCaching
 class CacheConfig {
-
     @Bean
-    fun cacheManager(): CacheManager{
+    fun cacheManager(): CacheManager {
         return ConcurrentMapCacheManager("Cryptos")
     }
 }

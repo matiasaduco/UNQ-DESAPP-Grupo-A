@@ -3,13 +3,13 @@ package ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.dto
 import ar.edu.unq.desapp.grupoA.CryptoExchangeApi.model.Crypto
 import java.time.format.DateTimeFormatter
 
-class CryptoDTO (
+class CryptoDTO(
     val symbol: String,
     val price: Float,
     val pricingTime: String
-){
+) {
 
-    companion object{
+    companion object {
         fun fromModel(crypto: Crypto): CryptoDTO {
             return CryptoDTO(
                 crypto.symbol,
